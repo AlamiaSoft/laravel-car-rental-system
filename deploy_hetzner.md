@@ -24,7 +24,6 @@ APP_NAME=OrmEasy
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://ormeasy-car.alamiaai.com
-APP_PORT=8005
 APP_KEY=base64:LM66X++eqZ6V1i5aG+geUI0Uq4/wfDQzIt4PLdfF91c=
 
 # Database configuration
@@ -75,17 +74,11 @@ Once the stack is deployed, the `app` container will automatically run the datab
 You don't need to manually run any shell commands! Just wait a few seconds for the database to boot and the migrations to complete.
 
 ## 3. Setup Cloudflare Tunnel
-Since you mentioned using Cloudflare Tunnels for exposing `ormeasy-car.alamiaai.com`, you don't need to open port 80/443 on your Hetzner firewall.
+Because all containers run on the shared `alamia-network` where your Cloudflare Tunnel (`cloudflared`) operates, you do **not** need to expose any ports to the host machine.
 
-1. **Install Cloudflared on Hetzner VPS**:
-   Follow Cloudflare's instructions in the Zero Trust dashboard to create a new tunnel and install the daemon on your VPS.
-
-2. **Configure the Tunnel**:
-   In the Cloudflare Zero Trust Dashboard, route your hostname `ormeasy-car.alamiaai.com` to the local Docker application.
-   - **Service Type**: `HTTP`
-   - **URL**: `localhost:8005` (Or whatever port `APP_PORT` is set to; default is `8005`)
-   
-3. **Save and wait for DNS to propagate.**
+In your Cloudflare Zero Trust Dashboard, configure the public hostname `ormeasy-car.alamiaai.com`:
+- **Service Type**: `HTTP`
+- **URL**: `http://ormeasy-car-app-1:80` (or `http://carrental-os-app-1:80` depending on the Portainer stack name)
 
 ## 4. Verify Deployment
 Navigate to `https://ormeasy-car.alamiaai.com` in your browser.

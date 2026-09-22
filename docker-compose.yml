@@ -1,11 +1,13 @@
 name: carrental-os
 
+networks:
+  alamia-network:
+    external: true
+
 services:
   app:
     build: .
     restart: unless-stopped
-    ports:
-      - "${APP_PORT:-8005}:80"
     volumes:
       - storage-data:/app/storage
     environment:
@@ -44,7 +46,7 @@ services:
       - FACEBOOK_CLIENT_SECRET=${FACEBOOK_CLIENT_SECRET}
       - FACEBOOK_REDIRECT_URL=${FACEBOOK_REDIRECT_URL}
     networks:
-      - carrental-network
+      - alamia-network
     depends_on:
       - db
       - redis
@@ -90,7 +92,7 @@ services:
       - FACEBOOK_CLIENT_SECRET=${FACEBOOK_CLIENT_SECRET}
       - FACEBOOK_REDIRECT_URL=${FACEBOOK_REDIRECT_URL}
     networks:
-      - carrental-network
+      - alamia-network
     depends_on:
       - db
       - redis
@@ -136,7 +138,7 @@ services:
       - FACEBOOK_CLIENT_SECRET=${FACEBOOK_CLIENT_SECRET}
       - FACEBOOK_REDIRECT_URL=${FACEBOOK_REDIRECT_URL}
     networks:
-      - carrental-network
+      - alamia-network
     depends_on:
       - db
       - redis
@@ -145,8 +147,6 @@ services:
     build: .
     command: php artisan reverb:start --host=0.0.0.0 --port=8080
     restart: unless-stopped
-    ports:
-      - "${REVERB_HOST_PORT:-8085}:8080"
     environment:
       - APP_ENV=production
       - LOG_CHANNEL=stderr
@@ -171,7 +171,7 @@ services:
       - REVERB_PORT=${REVERB_PORT:-8080}
       - REVERB_SCHEME=${REVERB_SCHEME:-http}
     networks:
-      - carrental-network
+      - alamia-network
     depends_on:
       - redis
 
@@ -185,7 +185,7 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
-      - carrental-network
+      - alamia-network
 
   redis:
     image: redis:7-alpine
@@ -193,11 +193,7 @@ services:
     volumes:
       - redis-data:/data
     networks:
-      - carrental-network
-
-networks:
-  carrental-network:
-    driver: bridge
+      - alamia-network
 
 volumes:
   db-data:
