@@ -30,6 +30,8 @@ class CarRentalSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(RolesAndPermissionsSeeder::class);
+
         $tenantId = 'prime-rentals';
 
         $tenant = Tenant::firstOrCreate(
