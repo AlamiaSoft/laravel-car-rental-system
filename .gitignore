@@ -1,0 +1,49 @@
+# Application Logs & Caches
+*.log
+.phpunit.result.cache
+/.phpunit.cache
+.phpactor.json
+_ide_helper.php
+
+# Environment & Secrets
+.env
+.env.backup
+.env.production
+.env.local
+.env.*.local
+auth.json
+
+# Local Databases & Scratch
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.db
+/alamia_os
+
+# Storage & Temporary Files
+/storage/*.key
+/storage/oauth-*.key
+/storage/pail
+/public/hot
+/public/storage
+/public/build
+/public/fonts-manifest.dev.json
+
+# Dependencies
+/node_modules
+/vendor
+
+# IDE & Editor Configurations
+.DS_Store
+Thumbs.db
+/.codex
+/.cursor/
+/.idea
+/.nova
+/.vscode
+/.zed
+Homestead.json
+Homestead.yaml
+
+# Specific Exclusions
+docs/highly-marketable-landing-page/tarkabot-landing.html

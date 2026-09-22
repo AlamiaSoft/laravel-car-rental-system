@@ -1,0 +1,11 @@
+{
+    "name": "Rental",
+    "alias": "rental",
+    "description": "Multi-tenant Car Rental System: Fleet, Drivers, Bookings, WhatsApp Auto-Matcher, Maintenance, and Third-Party Sourcing",
+    "keywords": ["car-rental", "fleet", "bookings", "drivers", "maintenance"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Rental\\Providers\\RentalServiceProvider"
+    ],
+    "files": []
+}

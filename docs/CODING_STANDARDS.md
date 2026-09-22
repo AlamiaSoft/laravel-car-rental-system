@@ -1,0 +1,3 @@
+# CODING STANDARDS
+
+Documentation pending.

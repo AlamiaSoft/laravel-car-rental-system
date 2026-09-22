@@ -1,0 +1,21 @@
+Category,Item Name,Price,Description,Is Deal,Deal Items
+Pizza,Margherita Small,899,Classic mozzarella and tomato sauce,No,
+Pizza,Margherita Medium,1499,Classic mozzarella and tomato sauce,No,
+Pizza,Pepperoni Medium,1699,Loaded with pepperoni and mozzarella,No,
+Pizza,Chicken Tikka Medium,1799,Spicy chicken tikka with onions,No,
+Pizza,Fajita Large,2199,Grilled fajita chicken and capsicum,No,
+Pizza,BBQ Chicken Large,2299,BBQ chicken with sweet smoky sauce,No,
+Pizza,Veggie Supreme Medium,1599,Fresh vegetables and olives,No,
+Pizza,Cheese Lovers Large,2099,Extra cheese overload,No,
+Sides,Garlic Bread,399,Fresh garlic bread,No,
+Sides,Cheesy Garlic Bread,599,Garlic bread topped with cheese,No,
+Sides,Chicken Wings 6 pcs,799,Spicy crispy wings,No,
+Sides,French Fries,349,Golden crispy fries,No,
+Sides,Loaded Fries,699,Fries with cheese and chicken,No,
+Drinks,Pepsi 500ml,120,Chilled soft drink,No,
+Drinks,7UP 500ml,120,Refreshing lemon soda,No,
+Drinks,Mineral Water 500ml,80,Bottled water,No,
+Desserts,Chocolate Lava Cake,499,Warm chocolate dessert,No,
+Deals,Couple Deal,2999,2 Medium Pizzas + Garlic Bread + 1.5L Pepsi,Yes,"Margherita Medium, Chicken Tikka Medium, Garlic Bread, Pepsi 1.5L"
+Deals,Family Feast,4999,2 Large Pizzas + Wings + Loaded Fries + 1.5L Pepsi,Yes,"Fajita Large, BBQ Chicken Large, Chicken Wings 6 pcs, Loaded Fries, Pepsi 1.5L"
+Deals,Lunch Combo,999,Personal Pizza + Fries + Drink,Yes,"Margherita Small, French Fries, Pepsi 500ml"

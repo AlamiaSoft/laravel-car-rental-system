@@ -1,0 +1,54 @@
+-> Executing /opt/docker/provision/entrypoint.d/05-permissions.sh
+-> Executing /opt/docker/provision/entrypoint.d/20-nginx.sh
+-> Executing /opt/docker/provision/entrypoint.d/20-php-fpm.sh
+-> Executing /opt/docker/provision/entrypoint.d/20-php.sh
+-> Executing /opt/docker/bin/service.d/supervisor.d//10-init.sh
+2026-08-20 11:31:20,702 INFO Included extra file "/opt/docker/etc/supervisor.d/cron.conf" during parsing
+2026-08-20 11:31:20,703 INFO Included extra file "/opt/docker/etc/supervisor.d/dnsmasq.conf" during parsing
+2026-08-20 11:31:20,703 INFO Included extra file "/opt/docker/etc/supervisor.d/nginx.conf" during parsing
+2026-08-20 11:31:20,703 INFO Included extra file "/opt/docker/etc/supervisor.d/php-fpm.conf" during parsing
+2026-08-20 11:31:20,703 INFO Included extra file "/opt/docker/etc/supervisor.d/postfix.conf" during parsing
+2026-08-20 11:31:20,703 INFO Included extra file "/opt/docker/etc/supervisor.d/ssh.conf" during parsing
+2026-08-20 11:31:20,703 INFO Included extra file "/opt/docker/etc/supervisor.d/syslog.conf" during parsing
+2026-08-20 11:31:20,703 INFO Set uid to user 0 succeeded
+2026-08-20 11:31:20,707 INFO RPC interface 'supervisor' initialized
+2026-08-20 11:31:20,708 INFO supervisord started with pid 1
+2026-08-20 11:31:21,710 INFO spawned: 'syslogd' with pid 50
+2026-08-20 11:31:21,712 INFO spawned: 'nginxd' with pid 51
+2026-08-20 11:31:21,714 INFO spawned: 'php-fpmd' with pid 52
+2026-08-20 11:31:21,717 INFO spawned: 'crond' with pid 55
+-> Executing /opt/docker/bin/service.d/syslog-ng.d//10-init.sh
+-> Executing /opt/docker/bin/service.d/nginx.d//10-init.sh
+2026-08-20 11:31:21,718 INFO success: nginxd entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
+2026-08-20 11:31:21,718 INFO success: php-fpmd entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
+2026-08-20 11:31:21,719 INFO success: crond entered RUNNING state, process has stayed up for > than 0 seconds (startsecs)
+-> Executing /opt/docker/bin/service.d/php-fpm.d//10-init.sh
+Setting php-fpm user to application
+-> Executing /opt/docker/bin/service.d/cron.d//10-init.sh
+[2026-08-20T11:31:21.731036] WARNING: Your configuration file uses an obsoleted keyword, please update your configuration; keyword='stats_freq', change='Use the stats() block. E.g. stats(freq(1));', location='/etc/syslog-ng/syslog-ng.conf:19:5'
+[SYSLOG] syslog-ng[50]: syslog-ng starting up; version='4.11.0'
+[20-Aug-2026 11:31:21] NOTICE: fpm is running, pid 52
+[20-Aug-2026 11:31:21] NOTICE: ready to handle connections
+2026-08-20 11:31:22,827 INFO success: syslogd entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+[2026-08-20 11:32:38] production.INFO: InitializeTenancy ran {"auth_check":false,"user":null} 
+172.20.0.2 - - [20/Aug/2026:11:32:38 +0000] "GET /login HTTP/1.1" 200 45494 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+[php-fpm:access] 127.0.0.1 -  20/Aug/2026:11:32:37 +0000 "GET /index.php" 200 /app/public/index.php 412.230 12288 94.61%
+[2026-08-20 11:32:40] production.INFO: InitializeTenancy ran {"auth_check":false,"user":null} 
+172.20.0.2 - - [20/Aug/2026:11:32:40 +0000] "GET /login HTTP/1.1" 200 45494 "https://waorder.alamiaai.com/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+[php-fpm:access] 127.0.0.1 -  20/Aug/2026:11:32:40 +0000 "GET /index.php" 200 /app/public/index.php 67.023 4096 74.60%
+[2026-08-20 11:32:42] production.INFO: InitializeTenancy ran {"auth_check":false,"user":null} 
+172.20.0.2 - - [20/Aug/2026:11:32:42 +0000] "GET /auth/google/redirect HTTP/1.1" 302 1242 "https://waorder.alamiaai.com/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+[php-fpm:access] 127.0.0.1 -  20/Aug/2026:11:32:42 +0000 "GET /index.php" 302 /app/public/index.php 44.640 6144 89.61%
+[2026-08-20 11:32:56] production.WARNING: Evolution Webhook: Received event 'messages.upsert' for unknown or inactive instance: 'tenant_b7d0a828-a0db-4f50-ad90-e4bd4f97de9c_lVscLM'  
+172.20.0.2 - - [20/Aug/2026:11:32:56 +0000] "POST /api/bot/whatsapp/evolution/webhook HTTP/1.1" 404 48 "-" "axios/1.13.2"
+[php-fpm:access] 127.0.0.1 -  20/Aug/2026:11:32:56 +0000 "POST /index.php" 404 /app/public/index.php 60.135 4096 83.15%
+[2026-08-20 11:33:21] production.INFO: InitializeTenancy ran {"auth_check":false,"user":null} 
+172.20.0.2 - - [20/Aug/2026:11:33:21 +0000] "GET /login HTTP/1.1" 200 45494 "https://waorder.alamiaai.com/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+[php-fpm:access] 127.0.0.1 -  20/Aug/2026:11:33:21 +0000 "GET /index.php" 200 /app/public/index.php 56.831 4096 87.98%
+[2026-08-20 11:33:23] production.INFO: InitializeTenancy ran {"auth_check":false,"user":null} 
+172.20.0.2 - - [20/Aug/2026:11:33:23 +0000] "GET /auth/google/redirect HTTP/1.1" 302 1242 "https://waorder.alamiaai.com/login" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
+[php-fpm:access] 127.0.0.1 -  20/Aug/2026:11:33:23 +0000 "GET /index.php" 302 /app/public/index.php 41.070 4096 73.05%
+2026/08/20 11:33:24 [warn] 67#67: *1 a client request body is buffered to a temporary file /var/lib/nginx/tmp/client_body/0000000001, client: 172.20.0.2, server: _, request: "POST /api/bot/whatsapp/evolution/webhook HTTP/1.1", host: "waorder.alamiaai.com"
+[2026-08-20 11:33:24] production.WARNING: Evolution Webhook: Received event 'messages.upsert' for unknown or inactive instance: 'tenant_b7d0a828-a0db-4f50-ad90-e4bd4f97de9c_lVscLM'  
+172.20.0.2 - - [20/Aug/2026:11:33:24 +0000] "POST /api/bot/whatsapp/evolution/webhook HTTP/1.1" 404 48 "-" "axios/1.13.2"
+[php-fpm:access] 127.0.0.1 -  20/Aug/2026:11:33:24 +0000 "POST /index.php" 404 /app/public/index.php 54.418 4096 91.88%

@@ -1,0 +1,3 @@
+# DOMAIN MODEL
+
+Documentation pending.

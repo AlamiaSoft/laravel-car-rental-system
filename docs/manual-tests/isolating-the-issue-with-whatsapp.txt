@@ -1,0 +1,51 @@
+This is actually useful: **Laravel is receiving the Evolution webhook correctly, and your bot is definitely attempting the reply.**
+
+The decisive line is:
+
+```text
+18:03:22 Evolution [tenant_default-restaurant_YASUrt]: Sending buttons to 923345112969
+```
+
+followed by:
+
+```text
+POST /api/bot/whatsapp/evolution/webhook 200
+```
+
+So the flow is now:
+
+**Customer → WhatsApp → Evolution → Laravel webhook → Bot → Evolution send attempt.**
+
+The remaining problem is specifically the **outgoing buttons message**. Your earlier Evolution log showed the outgoing payload being represented as:
+
+```text
+viewOnceMessage
+```
+
+and then the session eventually went `connecting → close`.
+
+### Next test — very important
+
+Have your dev agent temporarily change the bot's first response from **buttons** to a **plain text message**, e.g.:
+
+> "Hi! Welcome to Restaurant OS. Please reply 1 for Menu."
+
+Then test again.
+
+If plain text arrives, we've isolated the problem to **Evolution/Baileys button-message compatibility**, not your webhook, tenancy, bot routing, or basic messaging pipeline.
+
+I would **not spend time debugging buttons yet**. Get this baseline working first:
+
+```text
+Incoming text
+   ↓
+Laravel
+   ↓
+Bot
+   ↓
+Evolution sendText
+   ↓
+Customer receives text ✓
+```
+
+Then add interactive buttons/lists afterward. This is the cleanest way to isolate the integration.

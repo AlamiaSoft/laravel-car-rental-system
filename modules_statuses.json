@@ -1,0 +1,9 @@
+{
+    "Authentication": true,
+    "Core": true,
+    "Menu": true,
+    "Orders": true,
+    "Bot": true,
+    "Crm": true,
+    "Rental": true
+}

@@ -1,0 +1,65 @@
+plain tetx messages are now working; for buttons i found this in google search:
+
+To send a message containing interactive buttons using the [**Evolution API**](https://github.com/evolution-foundation/evolution-api), you must use the `sendButtons` endpoint. [[1](https://www.postman.com/agenciadgcode/evolution-api/request/yzdo2s2/send-button), [2](https://github.com/evolution-foundation/evolution-api)]
+
+**⚠️ Crucial WhatsApp Compatibility Notice**
+
+Because of underlying changes to the WhatsApp protocol, traditional **interactive buttons and lists are highly unstable or natively broken on Baileys (WhatsApp Web) connections**. Depending on your version and environment, button messages may fail to show up on mobile devices completely or result in `400 Bad Request` errors. [[1](https://www.postman.com/agenciadgcode/evolution-api/request/4j8gdcw/send-buttons-deprecated), [2](https://github.com/evolution-foundation/evolution-api/issues/2404), [3](https://github.com/evolution-foundation/evolution-api/issues/2351), [4](https://github.com/StrategicProjects/evolution/), [5](https://github.com/evolution-foundation/evolution-api/issues/1261)]
+
+- **The Best Practice Fix:** For 100% reliable interactive choices on regular WhatsApp numbers, **use** **`sendPoll`** instead.
+- **If you must use Buttons:** Ensure you are using the official WhatsApp Cloud API integration channel inside Evolution API. [[1](https://github.com/evolution-foundation/evolution-api), [2](https://github.com/StrategicProjects/evolution/)]
+
+---
+
+**API Endpoint & Headers**
+
+- **Method:** `POST`
+- **URL:** `{{baseUrl}}/message/sendButtons/{{instance}}` [[1](https://www.postman.com/agenciadgcode/evolution-api/request/yzdo2s2/send-button)]
+- **Headers:**
+  - `apikey`: `YOUR_INSTANCE_API_KEY`
+  - `Content-Type`: `application/json` [[1](https://lobehub.com/skills/openclaw-skills-evolution-api)]
+
+---
+
+**Request Body Template (JSON)**
+
+The payload allows you to define quick replies, URL shortcuts, click-to-call triggers, and even copy-to-clipboard functionality. [[1](https://www.postman.com/agenciadgcode/evolution-api/request/objtuf7/send-button), [2](https://www.youtube.com/watch?v=6l6R3b2Hbb0\&t=514)]
+
+**json**
+
+```
+{
+  "number": "5511999999999",
+  "title": "Action Required",
+  "description": "Please select one of the following options to proceed with your order.",
+  "footer": "Choose wisely",
+  "buttons": [
+    {
+      "type": "reply",
+      "displayText": "Confirm Order",
+      "id": "btn_confirm_01"
+    },
+    {
+      "type": "url",
+      "displayText": "Visit Website",
+      "url": "https://evolution-api.com"
+    },
+    {
+      "type": "call",
+      "displayText": "Call Support",
+      "phoneNumber": "+1234567890"
+    },
+    {
+      "type": "copy",
+      "displayText": "Copy Promo Code",
+      "copyCode": "PROMO2026"
+    }
+  ],
+  "delay": 1200
+}
+
+Yes — what you found is consistent with the behavior you're seeing. **Plain text working while Baileys buttons fail strongly points to the button implementation/WhatsApp-Web compatibility rather than your Laravel integration.**
+
+For your Restaurant OS, I would **not make classic `sendButtons` a core dependency**. Treat it as an optional/experimental capability. Use **plain text + numbered choices** as the guaranteed fallback, and investigate `sendPoll` separately if polls provide an acceptable UX. If you eventually move a tenant to **Evolution's WhatsApp Cloud API channel**, that's the route I'd test for reliable native interactive messages.
+
+One correction: **don't assume the exact JSON you found is valid for your installed `v2.3.7`**—Evolution's API/schema changes across versions, and your current instance is Baileys. First test the endpoint directly against your `YASUrt` instance with a minimal 1–3 `reply` button payload. If it fails, don't keep hacking the Laravel bot; record it as a **Baileys interactive-message limitation** and implement fallback.

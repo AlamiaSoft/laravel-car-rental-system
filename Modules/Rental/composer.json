@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/rental",
+    "description": "Car Rental Module",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Rental\\": "app/",
+            "Modules\\Rental\\Database\\Factories\\": "database/factories/",
+            "Modules\\Rental\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Rental\\Tests\\": "tests/"
+        }
+    }
+}
