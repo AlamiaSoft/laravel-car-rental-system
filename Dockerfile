@@ -7,10 +7,11 @@ RUN composer install --optimize-autoloader --no-dev --no-interaction --no-progre
 # Stage 2: Build Node dependencies
 FROM node:20-alpine AS node-builder
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+COPY package*.json .npmrc ./
+RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build
+
 
 # Stage 3: Final Production Image
 FROM webdevops/php-nginx:8.3-alpine
