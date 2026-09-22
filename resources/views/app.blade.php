@@ -7,8 +7,8 @@
         <title inertia>{{ config('app.name', 'OrmEasy') }}</title>
 
         <!-- Favicon & Branding -->
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-        <link rel="alternate icon" href="/favicon.ico">
+        <link rel="icon" type="image/webp" href="/favicon.webp">
+        <link rel="apple-touch-icon" href="/images/ormeasy-car-logo.webp">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

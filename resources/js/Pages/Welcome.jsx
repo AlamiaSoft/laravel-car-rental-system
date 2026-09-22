@@ -1,5 +1,22 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { 
+    Car, 
+    Fuel, 
+    Wrench, 
+    Calendar, 
+    Tag, 
+    Check, 
+    Zap, 
+    Users, 
+    MessageSquare, 
+    Handshake, 
+    Building2, 
+    TrendingUp, 
+    DollarSign, 
+    ArrowRight, 
+    ShieldCheck 
+} from 'lucide-react';
 
 export default function Welcome({ auth }) {
     const { appName } = usePage().props;
@@ -31,12 +48,11 @@ export default function Welcome({ auth }) {
                 <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
                     <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
                         <Link href="/" className="flex items-center gap-3 group">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 font-black text-xl shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-                                🚗
-                            </div>
-                            <span className="font-extrabold text-xl tracking-tight text-white">
-                                {name}<span className="text-amber-400">Rent</span>
-                            </span>
+                            <img 
+                                src="/images/ormeasy-car-logo.webp" 
+                                alt="OrmEasy Car Rentals" 
+                                className="h-11 w-auto object-contain"
+                            />
                         </Link>
 
                         <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-300">
@@ -83,7 +99,7 @@ export default function Welcome({ auth }) {
                     <div className="relative mx-auto max-w-7xl px-6">
                         <div className="text-center max-w-3xl mx-auto space-y-6">
                             <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1.5 text-xs font-bold text-amber-400 uppercase tracking-widest">
-                                🚗 The Multi-Tenant Car Rental Operating System
+                                <Car className="h-4 w-4" /> The Multi-Tenant Car Rental Operating System
                             </div>
 
                             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl leading-[1.15]">
@@ -112,19 +128,27 @@ export default function Welcome({ auth }) {
                             {/* Trust Row */}
                             <div className="pt-8 flex flex-wrap items-center justify-center gap-6 text-xs font-semibold text-slate-400">
                                 <span className="flex items-center gap-2">
-                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">✓</span>
+                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
+                                        <Check className="h-3.5 w-3.5" />
+                                    </span>
                                     Dual Pricing (Daily vs Lumpsum)
                                 </span>
                                 <span className="flex items-center gap-2">
-                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">✓</span>
+                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
+                                        <Check className="h-3.5 w-3.5" />
+                                    </span>
                                     Live Liter-Based Fuel Settlement
                                 </span>
                                 <span className="flex items-center gap-2">
-                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">✓</span>
+                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
+                                        <Check className="h-3.5 w-3.5" />
+                                    </span>
                                     WhatsApp Inbound Auto-Matcher
                                 </span>
                                 <span className="flex items-center gap-2">
-                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">✓</span>
+                                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
+                                        <Check className="h-3.5 w-3.5" />
+                                    </span>
                                     15-Day Free Trial (No Card Required)
                                 </span>
                             </div>
@@ -161,19 +185,26 @@ export default function Welcome({ auth }) {
                                             <span className="text-amber-400 font-mono font-bold">Rs. 22,000 / day</span>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-300">
-                                            <div className="bg-slate-900 p-2 rounded border border-slate-800">
-                                                🚙 <b>Fortuner V (LED-21-4920)</b>
-                                                <div className="text-slate-400">Available · 80L Tank</div>
+                                            <div className="bg-slate-900 p-2 rounded border border-slate-800 flex items-start gap-1.5">
+                                                <Car className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
+                                                <div>
+                                                    <div className="font-bold text-white">Fortuner V (LED-21-4920)</div>
+                                                    <div className="text-slate-400">Available · 80L Tank</div>
+                                                </div>
                                             </div>
-                                            <div className="bg-slate-900 p-2 rounded border border-slate-800">
-                                                👨‍✈️ <b>Driver: Tariq Mehmood</b>
-                                                <div className="text-slate-400">Available · Commercial Lic.</div>
+                                            <div className="bg-slate-900 p-2 rounded border border-slate-800 flex items-start gap-1.5">
+                                                <Users className="h-4 w-4 text-blue-400 shrink-0 mt-0.5" />
+                                                <div>
+                                                    <div className="font-bold text-white">Driver: Tariq Mehmood</div>
+                                                    <div className="text-slate-400">Available · Commercial Lic.</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="bg-amber-500 p-3 rounded-xl text-slate-950 font-bold text-center text-sm shadow-lg shadow-amber-500/20">
-                                        ⚡ 1-Click Convert to Confirmed Booking →
+                                    <div className="bg-amber-500 p-3 rounded-xl text-slate-950 font-bold text-center text-sm shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2">
+                                        <Zap className="h-4 w-4 fill-slate-950" />
+                                        <span>1-Click Convert to Confirmed Booking →</span>
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +214,7 @@ export default function Welcome({ auth }) {
                                 <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 rounded-xl bg-amber-500 flex items-center justify-center text-slate-950 font-black text-sm">
-                                            ⛽
+                                            <Fuel className="h-5 w-5" />
                                         </div>
                                         <div>
                                             <div className="font-bold text-white text-sm">Drop-Off & Fuel Settlement</div>
@@ -217,7 +248,10 @@ export default function Welcome({ auth }) {
                                     </div>
 
                                     <div className="flex items-center justify-between text-xs bg-slate-900 p-2.5 rounded-lg border border-slate-800">
-                                        <span className="text-slate-400">🔧 Service Inspection Due:</span>
+                                        <span className="text-slate-400 flex items-center gap-1.5">
+                                            <Wrench className="h-3.5 w-3.5 text-slate-400" />
+                                            Service Inspection Due:
+                                        </span>
                                         <span className="text-emerald-400 font-bold">In 320 km (Odometer safe)</span>
                                     </div>
                                 </div>
@@ -240,32 +274,50 @@ export default function Welcome({ auth }) {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8 space-y-6 hover:border-amber-500/50 transition-colors">
-                                <div className="h-12 w-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl font-bold">
-                                    📅
+                                <div className="h-12 w-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                                    <Calendar className="h-6 w-6" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-white">1. Daily Rate (Fuel Return Policy)</h3>
                                 <p className="text-slate-400 text-sm leading-relaxed">
                                     Ideal for multi-day business rentals, city commuting, and long-term hires. The client is billed per calendar day and contractually obligated to return the vehicle at the exact same fuel level.
                                 </p>
                                 <ul className="space-y-2 text-xs font-semibold text-slate-300">
-                                    <li className="flex items-center gap-2 text-amber-400">✓ Accurate duration calculation (calendar day rounding)</li>
-                                    <li className="flex items-center gap-2 text-amber-400">✓ Automatic fuel shortfall detection on drop-off</li>
-                                    <li className="flex items-center gap-2 text-amber-400">✓ Tank capacity in liters x market fuel price</li>
+                                    <li className="flex items-center gap-2 text-amber-400">
+                                        <Check className="h-4 w-4 shrink-0" />
+                                        <span>Accurate duration calculation (calendar day rounding)</span>
+                                    </li>
+                                    <li className="flex items-center gap-2 text-amber-400">
+                                        <Check className="h-4 w-4 shrink-0" />
+                                        <span>Automatic fuel shortfall detection on drop-off</span>
+                                    </li>
+                                    <li className="flex items-center gap-2 text-amber-400">
+                                        <Check className="h-4 w-4 shrink-0" />
+                                        <span>Tank capacity in liters x market fuel price</span>
+                                    </li>
                                 </ul>
                             </div>
 
                             <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8 space-y-6 hover:border-amber-500/50 transition-colors">
-                                <div className="h-12 w-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-2xl font-bold">
-                                    🏷️
+                                <div className="h-12 w-12 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                                    <Tag className="h-6 w-6" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-white">2. All-Inclusive Lumpsum Package</h3>
                                 <p className="text-slate-400 text-sm leading-relaxed">
                                     Perfect for airport transfers, VIP delegations, weddings, and inter-city outstation trips. Set one flat all-inclusive rate with driver allowances and toll/fuel expenses baked right in.
                                 </p>
                                 <ul className="space-y-2 text-xs font-semibold text-slate-300">
-                                    <li className="flex items-center gap-2 text-indigo-400">✓ Fixed package total with zero surprise fuel disputes</li>
-                                    <li className="flex items-center gap-2 text-indigo-400">✓ Clear security deposit tracking and return status</li>
-                                    <li className="flex items-center gap-2 text-indigo-400">✓ Partner fleet markup support for outsourced vehicles</li>
+                                    <li className="flex items-center gap-2 text-indigo-400">
+                                        <Check className="h-4 w-4 shrink-0" />
+                                        <span>Fixed package total with zero surprise fuel disputes</span>
+                                    </li>
+                                    <li className="flex items-center gap-2 text-indigo-400">
+                                        <Check className="h-4 w-4 shrink-0" />
+                                        <span>Clear security deposit tracking and return status</span>
+                                    </li>
+                                    <li className="flex items-center gap-2 text-indigo-400">
+                                        <Check className="h-4 w-4 shrink-0" />
+                                        <span>Partner fleet markup support for outsourced vehicles</span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -278,7 +330,8 @@ export default function Welcome({ auth }) {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                             <div className="space-y-6">
                                 <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1 text-xs font-bold text-amber-400 uppercase tracking-widest">
-                                    ⛽ Fleet Financial Control
+                                    <Fuel className="h-3.5 w-3.5" />
+                                    <span>Fleet Financial Control</span>
                                 </div>
 
                                 <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
@@ -369,7 +422,8 @@ export default function Welcome({ auth }) {
                     <div className="mx-auto max-w-7xl px-6">
                         <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
                             <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-1 text-xs font-bold text-amber-400 uppercase tracking-widest">
-                                💰 Agency ROI Engine
+                                <TrendingUp className="h-3.5 w-3.5" />
+                                <span>Agency ROI Engine</span>
                             </div>
                             <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
                                 Calculate Your Fleet's Bottom-Line Boost
@@ -496,8 +550,8 @@ export default function Welcome({ auth }) {
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 space-y-4 hover:border-slate-700 transition-all">
-                                <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl font-bold">
-                                    🚘
+                                <div className="h-10 w-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                                    <Car className="h-5 w-5" />
                                 </div>
                                 <h3 className="text-lg font-bold text-white">Fleet & Odometer Audit</h3>
                                 <p className="text-slate-400 text-xs leading-relaxed">
@@ -506,8 +560,8 @@ export default function Welcome({ auth }) {
                             </div>
 
                             <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 space-y-4 hover:border-slate-700 transition-all">
-                                <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl font-bold">
-                                    💬
+                                <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+                                    <MessageSquare className="h-5 w-5" />
                                 </div>
                                 <h3 className="text-lg font-bold text-white">WhatsApp Auto-Matcher</h3>
                                 <p className="text-slate-400 text-xs leading-relaxed">
@@ -516,8 +570,8 @@ export default function Welcome({ auth }) {
                             </div>
 
                             <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 space-y-4 hover:border-slate-700 transition-all">
-                                <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl font-bold">
-                                    👨‍✈️
+                                <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center">
+                                    <Users className="h-5 w-5" />
                                 </div>
                                 <h3 className="text-lg font-bold text-white">Driver Roster Management</h3>
                                 <p className="text-slate-400 text-xs leading-relaxed">
@@ -526,8 +580,8 @@ export default function Welcome({ auth }) {
                             </div>
 
                             <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 space-y-4 hover:border-slate-700 transition-all">
-                                <div className="h-10 w-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl font-bold">
-                                    🤝
+                                <div className="h-10 w-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                                    <Handshake className="h-5 w-5" />
                                 </div>
                                 <h3 className="text-lg font-bold text-white">Third-Party Fleet Sourcing</h3>
                                 <p className="text-slate-400 text-xs leading-relaxed">
@@ -536,8 +590,8 @@ export default function Welcome({ auth }) {
                             </div>
 
                             <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 space-y-4 hover:border-slate-700 transition-all">
-                                <div className="h-10 w-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-xl font-bold">
-                                    🔧
+                                <div className="h-10 w-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center">
+                                    <Wrench className="h-5 w-5" />
                                 </div>
                                 <h3 className="text-lg font-bold text-white">Preventive Maintenance Engine</h3>
                                 <p className="text-slate-400 text-xs leading-relaxed">
@@ -546,8 +600,8 @@ export default function Welcome({ auth }) {
                             </div>
 
                             <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 space-y-4 hover:border-slate-700 transition-all">
-                                <div className="h-10 w-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-xl font-bold">
-                                    🏢
+                                <div className="h-10 w-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
+                                    <Building2 className="h-5 w-5" />
                                 </div>
                                 <h3 className="text-lg font-bold text-white">True Multi-Tenant Isolation</h3>
                                 <p className="text-slate-400 text-xs leading-relaxed">
@@ -584,25 +638,32 @@ export default function Welcome({ auth }) {
 
                             <ul className="space-y-3 text-sm text-slate-300 text-left border-t border-b border-slate-800 py-6">
                                 <li className="flex items-center gap-3">
-                                    <span className="text-amber-400 font-bold">✓</span> Up to 50 Fleet Vehicles & Unlimited Bookings
+                                    <Check className="h-4 w-4 text-amber-400 shrink-0" />
+                                    <span>Up to 50 Fleet Vehicles & Unlimited Bookings</span>
                                 </li>
                                 <li className="flex items-center gap-3">
-                                    <span className="text-amber-400 font-bold">✓</span> WhatsApp Inbound Request Auto-Matcher
+                                    <Check className="h-4 w-4 text-amber-400 shrink-0" />
+                                    <span>WhatsApp Inbound Request Auto-Matcher</span>
                                 </li>
                                 <li className="flex items-center gap-3">
-                                    <span className="text-amber-400 font-bold">✓</span> Dual Pricing Engine (Daily + Fuel vs Lumpsum)
+                                    <Check className="h-4 w-4 text-amber-400 shrink-0" />
+                                    <span>Dual Pricing Engine (Daily + Fuel vs Lumpsum)</span>
                                 </li>
                                 <li className="flex items-center gap-3">
-                                    <span className="text-amber-400 font-bold">✓</span> Live Liter-Based Drop-Off Fuel Settlement
+                                    <Check className="h-4 w-4 text-amber-400 shrink-0" />
+                                    <span>Live Liter-Based Drop-Off Fuel Settlement</span>
                                 </li>
                                 <li className="flex items-center gap-3">
-                                    <span className="text-amber-400 font-bold">✓</span> Automated Odometer Maintenance Flagging
+                                    <Check className="h-4 w-4 text-amber-400 shrink-0" />
+                                    <span>Automated Odometer Maintenance Flagging</span>
                                 </li>
                                 <li className="flex items-center gap-3">
-                                    <span className="text-amber-400 font-bold">✓</span> Third-Party Partner Fleet Sourcing
+                                    <Check className="h-4 w-4 text-amber-400 shrink-0" />
+                                    <span>Third-Party Partner Fleet Sourcing</span>
                                 </li>
                                 <li className="flex items-center gap-3">
-                                    <span className="text-amber-400 font-bold">✓</span> Client CRM & Payment Tracking
+                                    <Check className="h-4 w-4 text-amber-400 shrink-0" />
+                                    <span>Client CRM & Payment Tracking</span>
                                 </li>
                             </ul>
 
@@ -619,15 +680,17 @@ export default function Welcome({ auth }) {
                 {/* ---------- FOOTER ---------- */}
                 <footer className="border-t border-slate-800 bg-slate-950 py-12 text-xs text-slate-500">
                     <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-500 text-slate-950 font-black text-sm">
-                                🚗
-                            </div>
-                            <span className="font-bold text-slate-300 text-sm">{name} Car Rental Operating System</span>
-                        </div>
+                        <Link href="/" className="flex items-center gap-3 group">
+                            <img 
+                                src="/images/ormeasy-car-logo.webp" 
+                                alt="OrmEasy Car Rentals" 
+                                className="h-9 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity" 
+                            />
+                            <span className="font-semibold text-slate-400 text-sm">Car Rental Operating System</span>
+                        </Link>
 
                         <div>
-                            © {new Date().getFullYear()} {name}. All rights reserved. Multi-Tenant Fleet Management & WhatsApp Dispatch SaaS.
+                            © {new Date().getFullYear()} OrmEasy. All rights reserved. Multi-Tenant Fleet Management & WhatsApp Dispatch SaaS.
                         </div>
                     </div>
                 </footer>
