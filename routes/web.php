@@ -116,10 +116,17 @@ Route::group(['prefix' => 'app/{tenant_slug}'], function () {
     Route::get('/{experience}', [MiniAppController::class, 'experience'])->name('pwa.app.experience');
 });
 
-// Resilient public asset route for logos and uploads (prevents 403 if symlink is absent or signed route interferes)
+// Resilient public asset route for logos and uploads with path traversal protection
 Route::get('/storage/{path}', function (string $path) {
-    $filePath = storage_path('app/public/'.$path);
-    if (! file_exists($filePath)) {
+    $basePath = realpath(storage_path('app/public'));
+    if (! $basePath) {
+        abort(404);
+    }
+
+    $filePath = realpath($basePath.DIRECTORY_SEPARATOR.$path);
+
+    // Strictly ensure resolved path exists, is a regular file, and resides inside storage/app/public
+    if (! $filePath || ! str_starts_with($filePath, $basePath) || ! is_file($filePath)) {
         abort(404);
     }
 

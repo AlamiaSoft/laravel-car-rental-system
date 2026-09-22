@@ -26,12 +26,18 @@ Every service (`app`, `worker`, `cron`, `reverb`, `db`, `redis`) must specify:
       - alamia-network
 ```
 
-### Rule 2: App Host Port Publishing & Avoiding Collisions
-- **`app` container**: Must publish to a dedicated, unassigned host port (e.g. `"${APP_PORT:-8005}:80"`) so it is prominently visible in the Portainer Containers UI table under **Published Ports**. Avoid standard busy ports like `80` or `8000`.
-- **Auxiliary services (`db`, `redis`, `reverb`, `worker`, `cron`)**: **NEVER** bind host ports (`8080`, `5432`, `6379`). Internal communication between `app`, `worker`, `db`, and `redis` resolves automatically over `alamia-network` via Docker DNS (`db:5432`, `redis:6379`).
+### Rule 2: App Host Port Publishing & Loopback Binding (`127.0.0.1`)
+- **`app` container**: Must publish to a dedicated, unassigned host port bound **exclusively to localhost (`127.0.0.1`)**:
+  ```yaml
+  ports:
+    - "127.0.0.1:${APP_PORT:-8005}:80"
+  ```
+  > [!IMPORTANT]
+  > Never bind to `0.0.0.0` (e.g. `"${APP_PORT:-8005}:80"`). Docker bypasses Linux UFW firewalls by default. Binding to `0.0.0.0` allows attackers to bypass Cloudflare WAF, rate limits, and DDoS protection by connecting directly to `http://<vps-ip>:8005`.
+- **Auxiliary services (`db`, `redis`, `reverb`, `worker`, `cron`)**: **NEVER** bind host ports (`8080`, `5432`, `6379`). Internal communication resolves automatically over `alamia-network` via Docker DNS (`db:5432`, `redis:6379`).
 
 ### Rule 3: Cloudflare Tunnel Routing
-- In the Cloudflare Zero Trust Dashboard, public hostnames route to the published port on the host:
+- In the Cloudflare Zero Trust Dashboard, public hostnames route to the published port on loopback:
   - **Service Type**: `HTTP`
   - **URL**: `localhost:8005` (Matches the Portainer published port).
 
@@ -86,7 +92,7 @@ ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 ---
 
-## 4. Volume & Asset Persistence
+## 4. Volume & Asset Persistence (With Path Traversal Protection)
 
 Uploaded assets (branding logos, vehicle photos, customer documents) must persist across container updates:
 - Define a dedicated volume (e.g., `storage-data:`).
@@ -95,14 +101,45 @@ Uploaded assets (branding logos, vehicle photos, customer documents) must persis
   volumes:
     - storage-data:/app/storage
   ```
-- In Laravel `routes/web.php`, always provide a fallback route `/storage/{path}` to stream files from `storage/app/public` so missing or broken symlinks in container volumes never cause `403 Forbidden` errors.
+- In Laravel `routes/web.php`, fallback routes `/storage/{path}` must include strict path traversal protection using `realpath()` and `str_starts_with()`:
+  ```php
+  Route::get('/storage/{path}', function (string $path) {
+      $basePath = realpath(storage_path('app/public'));
+      if (! $basePath) {
+          abort(404);
+      }
+
+      $filePath = realpath($basePath . DIRECTORY_SEPARATOR . $path);
+
+      if (! $filePath || ! str_starts_with($filePath, $basePath) || ! is_file($filePath)) {
+          abort(404);
+      }
+
+      return response()->file($filePath);
+  })->where('path', '.*')->name('storage.public.serve');
+  ```
 
 ---
 
-## 5. Portainer Stack Deployment Checklist
+## 5. Reverse Proxy & Client IP Trust (`bootstrap/app.php`)
+
+Because Cloudflare Tunnel terminates SSL at the edge and proxies HTTP internally, Laravel must be configured to trust upstream reverse proxies:
+```php
+->withMiddleware(function (Middleware $middleware): void {
+    $middleware->trustProxies(at: '*');
+})
+```
+This ensures:
+- `CF-Connecting-IP` / `X-Forwarded-For` is resolved so rate limiters (`throttle:`) track individual client IPs rather than throttling the entire server.
+- HTTPS redirects and asset URL generation do not get trapped in HTTP downgrade loops.
+
+---
+
+## 6. Portainer Stack Deployment Checklist
 
 When deploying a new stack in Portainer:
 1. **Repository Method**: Enter GitHub repository URL, branch (`refs/heads/main`), and compose path (`docker-compose.yml`).
 2. **Environment Variables**: Use **Advanced Mode** to paste the complete `.env` configuration (matching `deploy_hetzner.md`).
 3. **Deploy the Stack**: Portainer pulls code, builds image via Dockerfile, and boots containers.
-4. **Cloudflare Tunnel Routing**: Add the public hostname in Zero Trust pointing to `http://<stack_name>-app-1:80`.
+4. **Cloudflare Tunnel Routing**: Add the public hostname in Zero Trust pointing to `localhost:8005`.
+
