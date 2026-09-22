@@ -24,6 +24,7 @@ APP_NAME=OrmEasy
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://ormeasy-car.alamiaai.com
+APP_PORT=8005
 APP_KEY=base64:LM66X++eqZ6V1i5aG+geUI0Uq4/wfDQzIt4PLdfF91c=
 
 # Database configuration
@@ -82,7 +83,7 @@ Since you mentioned using Cloudflare Tunnels for exposing `ormeasy-car.alamiaai.
 2. **Configure the Tunnel**:
    In the Cloudflare Zero Trust Dashboard, route your hostname `ormeasy-car.alamiaai.com` to the local Docker application.
    - **Service Type**: `HTTP`
-   - **URL**: `localhost:8000` (Because our `docker-compose.yml` maps port 8000 on the host to port 80 in the app container)
+   - **URL**: `localhost:8005` (Or whatever port `APP_PORT` is set to; default is `8005`)
    
 3. **Save and wait for DNS to propagate.**
 
