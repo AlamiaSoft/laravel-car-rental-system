@@ -74,11 +74,9 @@ Once the stack is deployed, the `app` container will automatically run the datab
 You don't need to manually run any shell commands! Just wait a few seconds for the database to boot and the migrations to complete.
 
 ## 3. Setup Cloudflare Tunnel
-Because all containers run on the shared `alamia-network` where your Cloudflare Tunnel (`cloudflared`) operates, you do **not** need to expose any ports to the host machine.
-
 In your Cloudflare Zero Trust Dashboard, configure the public hostname `ormeasy-car.alamiaai.com`:
 - **Service Type**: `HTTP`
-- **URL**: `http://ormeasy-car-app-1:80` (or `http://carrental-os-app-1:80` depending on the Portainer stack name)
+- **URL**: `localhost:8005` (Matches the published port visible on `ormeasy-car-app-1` in Portainer)
 
 ## 4. Verify Deployment
 Navigate to `https://ormeasy-car.alamiaai.com` in your browser.

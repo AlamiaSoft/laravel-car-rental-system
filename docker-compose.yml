@@ -8,6 +8,8 @@ services:
   app:
     build: .
     restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8005}:80"
     volumes:
       - storage-data:/app/storage
     environment:
