@@ -20,10 +20,11 @@ Since your workflow relies on Portainer pulling directly from GitHub, you will s
 5. Under **Environment variables**, click **Advanced mode** and paste in the essential production variables:
 
 ```env
+APP_NAME=OrmEasy
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://ormeasy-car.alamiaconnect.com
-APP_KEY=
+APP_URL=https://ormeasy-car.alamiaai.com
+APP_KEY=base64:LM66X++eqZ6V1i5aG+geUI0Uq4/wfDQzIt4PLdfF91c=
 
 # Database configuration
 DB_CONNECTION=pgsql
@@ -31,7 +32,7 @@ DB_HOST=db
 DB_PORT=5432
 DB_DATABASE=carrental_os
 DB_USERNAME=carrental
-DB_PASSWORD=YourStrongDatabasePassword123
+DB_PASSWORD=postgression2026
 
 # Redis / Queue configuration
 REDIS_HOST=redis
@@ -51,18 +52,18 @@ REVERB_PORT=8080
 REVERB_SCHEME=http
 
 # OAuth (Google & Facebook)
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_REDIRECT_URL=https://ormeasy-car.alamiaconnect.com/auth/google/callback
+GOOGLE_CLIENT_ID=ADD_HERE
+GOOGLE_CLIENT_SECRET=ADD_HERE
+GOOGLE_REDIRECT_URL=https://ormeasy-car.alamiaai.com/auth/google/callback
 
 FACEBOOK_CLIENT_ID=your-facebook-client-id
 FACEBOOK_CLIENT_SECRET=your-facebook-client-secret
-FACEBOOK_REDIRECT_URL=https://ormeasy-car.alamiaconnect.com/auth/facebook/callback
+FACEBOOK_REDIRECT_URL=https://ormeasy-car.alamiaai.com/auth/facebook/callback
 
 # Evolution API
 EVOLUTION_API_URL=https://evoapi.alamiaai.com
-EVOLUTION_API_KEY=your-api-key
-EVOLUTION_WEBHOOK_URL=https://ormeasy-car.alamiaconnect.com/api/webhooks/evolution
+EVOLUTION_API_KEY=SOMEONE_XANGED_MES_TO_A_LONGLONGLONG_RANDOM_SECRETSS
+EVOLUTION_WEBHOOK_URL=https://ormeasy-car.alamiaai.com/api/webhooks/evolution
 ```
 
 6. Click **Deploy the stack**. Portainer will pull the repository, build the images based on the `Dockerfile` (which includes Node.js compilation), and start the containers.
@@ -73,20 +74,20 @@ Once the stack is deployed, the `app` container will automatically run the datab
 You don't need to manually run any shell commands! Just wait a few seconds for the database to boot and the migrations to complete.
 
 ## 3. Setup Cloudflare Tunnel
-Since you mentioned using Cloudflare Tunnels for exposing `ormeasy-car.alamiaconnect.com`, you don't need to open port 80/443 on your Hetzner firewall.
+Since you mentioned using Cloudflare Tunnels for exposing `ormeasy-car.alamiaai.com`, you don't need to open port 80/443 on your Hetzner firewall.
 
 1. **Install Cloudflared on Hetzner VPS**:
    Follow Cloudflare's instructions in the Zero Trust dashboard to create a new tunnel and install the daemon on your VPS.
 
 2. **Configure the Tunnel**:
-   In the Cloudflare Zero Trust Dashboard, route your hostname `ormeasy-car.alamiaconnect.com` to the local Docker application.
+   In the Cloudflare Zero Trust Dashboard, route your hostname `ormeasy-car.alamiaai.com` to the local Docker application.
    - **Service Type**: `HTTP`
    - **URL**: `localhost:8000` (Because our `docker-compose.yml` maps port 8000 on the host to port 80 in the app container)
    
 3. **Save and wait for DNS to propagate.**
 
 ## 4. Verify Deployment
-Navigate to `https://ormeasy-car.alamiaconnect.com` in your browser.
+Navigate to `https://ormeasy-car.alamiaai.com` in your browser.
 1. Check that the login screen loads correctly.
 2. Log in using a seeded user (e.g. `prime-rentals` credentials) or register a new tenant.
 3. Upload a logo in the Mini App Settings and verify that the logo image loads without a 403 error.
