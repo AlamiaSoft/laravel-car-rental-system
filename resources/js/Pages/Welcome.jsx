@@ -46,12 +46,12 @@ export default function Welcome({ auth }) {
             <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-white">
                 {/* ---------- NAVBAR ---------- */}
                 <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-2">
                         <Link href="/" className="flex items-center gap-3 group">
                             <img 
                                 src="/images/ormeasy-car-logo.webp" 
                                 alt="OrmEasy Car Rentals" 
-                                className="h-11 w-auto object-contain"
+                                className="min-h-[130px] h-[130px] w-auto object-contain"
                             />
                         </Link>
 
@@ -684,7 +684,7 @@ export default function Welcome({ auth }) {
                             <img 
                                 src="/images/ormeasy-car-logo.webp" 
                                 alt="OrmEasy Car Rentals" 
-                                className="h-9 w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity" 
+                                className="min-h-[130px] h-[130px] w-auto object-contain opacity-90 group-hover:opacity-100 transition-opacity" 
                             />
                             <span className="font-semibold text-slate-400 text-sm">Car Rental Operating System</span>
                         </Link>
