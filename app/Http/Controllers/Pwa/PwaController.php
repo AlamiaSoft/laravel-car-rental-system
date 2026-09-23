@@ -325,12 +325,25 @@ class PwaController extends Controller
             'payments' => 'required|array',
             'whatsapp' => 'required|array',
             'crm' => 'required|array',
+            'publish' => 'nullable|boolean',
         ]);
 
         TenantSetting::updateOrCreate(
             ['tenant_id' => $tenant->id, 'status' => 'draft'],
-            $validated
+            [
+                'branding' => $validated['branding'],
+                'ordering' => $validated['ordering'],
+                'payments' => $validated['payments'],
+                'whatsapp' => $validated['whatsapp'],
+                'crm' => $validated['crm'],
+            ]
         );
+
+        if ($request->boolean('publish')) {
+            (new TenantSettingsService)->publish($tenant->id);
+
+            return redirect()->back()->with('success', 'Settings saved and published to live PWA successfully!');
+        }
 
         return redirect()->back()->with('success', 'Draft settings saved successfully.');
     }

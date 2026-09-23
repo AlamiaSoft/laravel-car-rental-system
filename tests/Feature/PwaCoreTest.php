@@ -254,3 +254,40 @@ test('tenant settings can be saved as draft and published live', function () {
         ->where('previewMode', false)
     );
 });
+
+test('tenant settings can be saved and published simultaneously via publish flag', function () {
+    $user = User::factory()->create([
+        'tenant_id' => $this->tenant->id,
+    ]);
+
+    $settingsData = [
+        'branding' => ['primary_color' => '#10b981', 'tagline' => 'Emerald Car Fleet'],
+        'ordering' => ['type' => 'both', 'min_order' => 0, 'delivery_fee' => 0, 'free_delivery_threshold' => 0, 'prep_time_mins' => 30],
+        'payments' => ['cod_enabled' => true],
+        'whatsapp' => ['order_received' => 'Rental inquiry received!'],
+        'crm' => ['auto_tag' => 'car-lead'],
+        'publish' => true,
+    ];
+
+    $response = $this->actingAs($user)
+        ->post(route('settings.miniapp.save'), $settingsData);
+
+    $response->assertStatus(302);
+    $this->assertDatabaseHas('tenant_settings', [
+        'tenant_id' => $this->tenant->id,
+        'status' => 'published',
+    ]);
+
+    // Public PWA immediately has the newly published primary color
+    $response = $this->get(route('pwa.menu', ['tenant_slug' => $this->tenant->id]));
+    $response->assertOk();
+    $response->assertInertia(fn ($page) => $page
+        ->where('settings.branding.primary_color', '#10b981')
+    );
+
+    // Manifest also reflects the primary color
+    $response = $this->get(route('pwa.manifest', ['tenant_slug' => $this->tenant->id]));
+    $response->assertOk();
+    $response->assertJsonPath('theme_color', '#10b981');
+});
+

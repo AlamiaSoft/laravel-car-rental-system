@@ -2,9 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import { Menu as MenuIcon, X, Car, UtensilsCrossed, Search, MapPin, Phone, Clock, FileText } from 'lucide-react';
 
-export default function PwaLayout({ children, tenantName, tenantId }) {
+function getContrastColor(hexColor) {
+    if (!hexColor || typeof hexColor !== 'string' || !hexColor.startsWith('#')) return '#ffffff';
+    let hex = hexColor.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const r = parseInt(hex.substring(0, 2), 16) || 0;
+    const g = parseInt(hex.substring(2, 4), 16) || 0;
+    const b = parseInt(hex.substring(4, 6), 16) || 0;
+    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+    return yiq >= 160 ? '#0f172a' : '#ffffff';
+}
+
+export default function PwaLayout({ children, tenantName, tenantId, primaryColor = '#f59e0b' }) {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [recentOrders, setRecentOrders] = useState([]);
+    const contrastColor = getContrastColor(primaryColor);
 
     // Load recent orders from localStorage for easy customer tracking
     useEffect(() => {
@@ -25,7 +37,7 @@ export default function PwaLayout({ children, tenantName, tenantId }) {
         <div className="min-h-screen bg-gray-150 flex flex-col items-center justify-start text-gray-900">
             <Head>
                 {tenantId && <link rel="manifest" href={`/app/${tenantId}/manifest.json`} />}
-                <meta name="theme-color" content="#f59e0b" />
+                <meta name="theme-color" content={primaryColor} />
             </Head>
 
             {/* Mobile shell container */}
@@ -43,7 +55,7 @@ export default function PwaLayout({ children, tenantName, tenantId }) {
                             <MenuIcon className="w-6 h-6" />
                         </button>
                         
-                        <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 font-black shadow-sm text-sm">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center font-black shadow-sm text-sm" style={{ backgroundColor: primaryColor, color: contrastColor }}>
                             <Car className="w-4 h-4" />
                         </div>
                         <div>
@@ -80,7 +92,7 @@ export default function PwaLayout({ children, tenantName, tenantId }) {
                         <div className="relative w-72 max-w-[80vw] h-full bg-white shadow-2xl flex flex-col p-5 space-y-6 animate-slide-in">
                             <div className="flex justify-between items-center border-b border-gray-100 pb-4">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 font-extrabold text-sm">
+                                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-sm" style={{ backgroundColor: primaryColor, color: contrastColor }}>
                                         <Car className="w-4 h-4" />
                                     </div>
                                     <span className="font-extrabold text-sm text-gray-900">{tenantName}</span>

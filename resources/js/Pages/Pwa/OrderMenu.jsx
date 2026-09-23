@@ -51,7 +51,7 @@ export default function OrderMenu({ tenant, customer, categories, settings, prev
     const branding = settings?.branding || {};
     const ordering = settings?.ordering || {};
     const payments = settings?.payments || {};
-    const primaryColor = branding.primary_color || '#ef4444';
+    const primaryColor = branding.primary_color || '#f59e0b';
     const businessName = branding.business_name || tenant.name;
 
     // Filter products
@@ -188,7 +188,7 @@ export default function OrderMenu({ tenant, customer, categories, settings, prev
     };
 
     return (
-        <PwaLayout tenantName={businessName} tenantId={tenant.id}>
+        <PwaLayout tenantName={businessName} tenantId={tenant.id} primaryColor={primaryColor}>
             <Head title={`${businessName} - Online Menu`} />
 
             {/* Dynamic Styling injected via Style tag */}

@@ -3,12 +3,24 @@ import { useState } from 'react';
 import { Calendar, Clock, MessageSquare, CheckCircle, Info, Sparkles, MapPin, Phone, Car, Fuel, Users, Check } from 'lucide-react';
 import axios from 'axios';
 
+function getContrastColor(hexColor) {
+    if (!hexColor || typeof hexColor !== 'string' || !hexColor.startsWith('#')) return '#ffffff';
+    let hex = hexColor.replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    const r = parseInt(hex.substring(0, 2), 16) || 0;
+    const g = parseInt(hex.substring(2, 4), 16) || 0;
+    const b = parseInt(hex.substring(4, 6), 16) || 0;
+    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+    return yiq >= 160 ? '#0f172a' : '#ffffff';
+}
+
 export default function MiniApp({ tenant, customer, services = [], vehicles = [], settings, currentExperience, capabilities = [], previewMode = false }) {
     const isRental = currentExperience === 'rent' || capabilities.includes('rentals') || capabilities.includes('fleet');
     const isBooking = currentExperience === 'book' || capabilities.includes('booking');
     
     const branding = settings?.branding || {};
-    const primaryColor = isRental ? '#f59e0b' : (branding.primary_color || '#4f46e5');
+    const primaryColor = branding.primary_color || (isRental ? '#f59e0b' : '#4f46e5');
+    const contrastColor = getContrastColor(primaryColor);
 
     // Appointment State
     const [bookingSubmitted, setBookingSubmitted] = useState(false);
@@ -88,6 +100,14 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                 <meta name="theme-color" content={primaryColor} />
             </Head>
 
+            {/* Dynamic theme style injection */}
+            <style>{`
+                .pwa-ring-primary:focus {
+                    --tw-ring-color: ${primaryColor} !important;
+                    border-color: ${primaryColor} !important;
+                }
+            `}</style>
+
             {/* Top Branding Banner */}
             <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-100 dark:border-gray-700 sticky top-0 z-30">
                 <div className="max-w-xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -113,7 +133,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                 {/* Hero Card */}
                 <div 
                     className="rounded-2xl p-6 text-white shadow-lg relative overflow-hidden"
-                    style={{ background: isRental ? 'linear-gradient(135deg, #b45309, #78350f)' : `linear-gradient(135deg, ${primaryColor}, #312e81)` }}
+                    style={{ background: `linear-gradient(135deg, ${primaryColor}, #0f172a)` }}
                 >
                     <div className="relative z-10 flex items-start gap-4">
                         {branding.logo ? (
@@ -145,7 +165,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                         {vehicles.length > 0 && (
                             <div className="space-y-3">
                                 <h3 className="font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2">
-                                    <Car className="w-4 h-4 text-amber-500" /> Available Fleet Vehicles
+                                    <Car className="w-4 h-4" style={{ color: primaryColor }} /> Available Fleet Vehicles
                                 </h3>
                                 <div className="grid grid-cols-1 gap-3">
                                     {vehicles.map((v) => {
@@ -156,9 +176,13 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                                 onClick={() => setRentalForm({ ...rentalForm, vehicle_id: String(v.id) })}
                                                 className={`p-4 rounded-xl border transition-all cursor-pointer ${
                                                     isSelected
-                                                        ? 'bg-amber-50/60 dark:bg-amber-950/20 border-amber-500 shadow-sm'
-                                                        : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-amber-300'
+                                                        ? 'shadow-sm'
+                                                        : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'
                                                 }`}
+                                                style={isSelected ? {
+                                                    borderColor: primaryColor,
+                                                    backgroundColor: `${primaryColor}14`
+                                                } : {}}
                                             >
                                                 <div className="flex items-start gap-3">
                                                     {v.image_url && (
@@ -174,7 +198,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                                                     target="_blank"
                                                                     rel="noreferrer"
                                                                     onClick={(e) => e.stopPropagation()}
-                                                                    className="block text-[8px] text-gray-400 hover:text-amber-600 mt-0.5 truncate max-w-[64px]"
+                                                                    className="block text-[8px] text-gray-400 hover:underline mt-0.5 truncate max-w-[64px]"
                                                                     title={`Photo by ${v.photo_metadata.photographer} on Pexels`}
                                                                 >
                                                                     by {v.photo_metadata.photographer}
@@ -193,7 +217,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                                                 </div>
                                                             </div>
                                                             <div className="text-right flex-shrink-0">
-                                                                <span className="font-extrabold text-amber-600 dark:text-amber-400 text-sm">
+                                                                <span className="font-extrabold text-sm" style={{ color: primaryColor }}>
                                                                     Rs. {Number(v.daily_rate).toLocaleString()}
                                                                 </span>
                                                                 <span className="text-[10px] text-gray-400 block">/ day</span>
@@ -206,7 +230,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                                                 {v.fuel_tank_capacity ? `${v.fuel_tank_capacity}L Tank Capacity` : 'Standard Tank'}
                                                             </span>
                                                             {isSelected && (
-                                                                <span className="ml-auto text-[11px] font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                                                                <span className="ml-auto text-[11px] font-bold flex items-center gap-1" style={{ color: primaryColor }}>
                                                                     <Check className="w-3.5 h-3.5" /> Selected
                                                                 </span>
                                                             )}
@@ -223,7 +247,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                         {/* Rental Request Form */}
                         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 space-y-5">
                             <div className="flex items-center gap-2 border-b border-gray-100 dark:border-gray-700 pb-3">
-                                <Car className="w-5 h-5 text-amber-500" />
+                                <Car className="w-5 h-5" style={{ color: primaryColor }} />
                                 <h3 className="font-bold text-base text-gray-900 dark:text-white">Request Vehicle Rental</h3>
                             </div>
 
@@ -235,7 +259,10 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
 
                             {rentalSubmitted ? (
                                 <div className="text-center py-8 space-y-3">
-                                    <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-full flex items-center justify-center mx-auto">
+                                    <div 
+                                        className="w-12 h-12 rounded-full flex items-center justify-center mx-auto"
+                                        style={{ backgroundColor: `${primaryColor}20`, color: primaryColor }}
+                                    >
                                         <CheckCircle className="w-7 h-7" />
                                     </div>
                                     <h4 className="text-lg font-bold text-gray-900 dark:text-white">Rental Request Sent!</h4>
@@ -257,7 +284,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                             <select
                                                 value={rentalForm.vehicle_id}
                                                 onChange={(e) => setRentalForm({ ...rentalForm, vehicle_id: e.target.value })}
-                                                className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                                                className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                             >
                                                 <option value="">Any Available Vehicle</option>
                                                 {vehicles.map((v) => (
@@ -277,7 +304,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                             value={rentalForm.name}
                                             onChange={(e) => setRentalForm({ ...rentalForm, name: e.target.value })}
                                             placeholder="e.g. Tariq Khan"
-                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                         />
                                     </div>
 
@@ -289,7 +316,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                             value={rentalForm.phone}
                                             onChange={(e) => setRentalForm({ ...rentalForm, phone: e.target.value })}
                                             placeholder="03001234567"
-                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                         />
                                     </div>
 
@@ -301,7 +328,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                                 required
                                                 value={rentalForm.start_date}
                                                 onChange={(e) => setRentalForm({ ...rentalForm, start_date: e.target.value })}
-                                                className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                                                className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                             />
                                         </div>
 
@@ -312,7 +339,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                                 required
                                                 value={rentalForm.end_date}
                                                 onChange={(e) => setRentalForm({ ...rentalForm, end_date: e.target.value })}
-                                                className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                                                className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                             />
                                         </div>
                                     </div>
@@ -324,14 +351,15 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                             value={rentalForm.notes}
                                             onChange={(e) => setRentalForm({ ...rentalForm, notes: e.target.value })}
                                             placeholder="e.g. Need driver, inter-city trip to Islamabad, airport pickup..."
-                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-amber-500 focus:outline-none"
+                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                         />
                                     </div>
 
                                     <button
                                         type="submit"
                                         disabled={rentalSubmitting}
-                                        className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                                        className="w-full py-3 font-extrabold rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2 disabled:opacity-50 hover:opacity-95"
+                                        style={{ backgroundColor: primaryColor, color: contrastColor }}
                                     >
                                         <Car className="w-4 h-4" /> {rentalSubmitting ? 'Sending Request...' : 'Submit Rental Inquiry →'}
                                     </button>
@@ -378,7 +406,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                         value={bookingForm.name}
                                         onChange={(e) => setBookingForm({ ...bookingForm, name: e.target.value })}
                                         placeholder="Full Name"
-                                        className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                        className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                     />
                                 </div>
 
@@ -390,7 +418,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                         value={bookingForm.phone}
                                         onChange={(e) => setBookingForm({ ...bookingForm, phone: e.target.value })}
                                         placeholder="WhatsApp Number"
-                                        className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                        className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                     />
                                 </div>
 
@@ -400,7 +428,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                         <select
                                             value={bookingForm.service_id}
                                             onChange={(e) => setBookingForm({ ...bookingForm, service_id: e.target.value })}
-                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                         >
                                             <option value="">Select a service...</option>
                                             {services.map((s) => (
@@ -420,7 +448,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                             required
                                             value={bookingForm.preferredDate}
                                             onChange={(e) => setBookingForm({ ...bookingForm, preferredDate: e.target.value })}
-                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                         />
                                     </div>
 
@@ -431,7 +459,7 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                             required
                                             value={bookingForm.preferredTime}
                                             onChange={(e) => setBookingForm({ ...bookingForm, preferredTime: e.target.value })}
-                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                            className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                         />
                                     </div>
                                 </div>
@@ -443,15 +471,15 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                         value={bookingForm.notes}
                                         onChange={(e) => setBookingForm({ ...bookingForm, notes: e.target.value })}
                                         placeholder="Specific concerns or questions..."
-                                        className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                        className="w-full px-3 py-2 text-sm rounded-xl border border-gray-200 dark:border-gray-700 dark:bg-gray-900 focus:ring-2 pwa-ring-primary focus:outline-none"
                                     />
                                 </div>
 
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="w-full py-3 text-white font-bold rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2 disabled:opacity-50"
-                                    style={{ backgroundColor: primaryColor }}
+                                    className="w-full py-3 font-bold rounded-xl shadow-md transition text-sm flex items-center justify-center gap-2 disabled:opacity-50 hover:opacity-95"
+                                    style={{ backgroundColor: primaryColor, color: contrastColor }}
                                 >
                                     <Calendar className="w-4 h-4" /> {submitting ? 'Submitting...' : 'Confirm Appointment Request'}
                                 </button>

@@ -17,7 +17,7 @@ class TenantSettingsService
                 'business_name' => '',
                 'logo' => '',
                 'favicon' => '',
-                'primary_color' => '#ef4444',
+                'primary_color' => '#f59e0b',
                 'tagline' => 'Premium cars one Call Away!',
             ],
             'ordering' => [
@@ -53,6 +53,13 @@ class TenantSettingsService
         $setting = TenantSetting::where('tenant_id', $tenantId)
             ->where('status', $status)
             ->first();
+
+        // If requesting draft and none exists, check if published exists
+        if (! $setting && $status === 'draft') {
+            $setting = TenantSetting::where('tenant_id', $tenantId)
+                ->where('status', 'published')
+                ->first();
+        }
 
         $tenant = Tenant::find($tenantId);
         $tenantName = $tenant ? $tenant->name : '';

@@ -26,7 +26,7 @@ export default function MiniApp({ settings, tenantId }) {
             business_name: settings.branding?.business_name || '',
             logo: settings.branding?.logo || '',
             favicon: settings.branding?.favicon || '',
-            primary_color: settings.branding?.primary_color || '#ef4444',
+            primary_color: settings.branding?.primary_color || '#f59e0b',
             tagline: settings.branding?.tagline || 'Premium cars one call away!',
         },
         ordering: {
@@ -136,6 +136,24 @@ export default function MiniApp({ settings, tenantId }) {
             onError: () => {
                 setIsSaving(false);
                 setStatusMessage({ type: 'error', text: 'Failed to save draft settings.' });
+            }
+        });
+    };
+
+    const handleSaveAndPublish = (e) => {
+        e.preventDefault();
+        setIsSaving(true);
+        setStatusMessage(null);
+
+        router.post(route('settings.miniapp.save'), { ...form, publish: true }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setIsSaving(false);
+                setStatusMessage({ type: 'success', text: 'Settings saved and published to live PWA successfully!' });
+            },
+            onError: () => {
+                setIsSaving(false);
+                setStatusMessage({ type: 'error', text: 'Failed to save and publish settings.' });
             }
         });
     };
@@ -464,13 +482,21 @@ export default function MiniApp({ settings, tenantId }) {
                             )}
 
                             {/* Sticky footer action button */}
-                            <div className="border-t border-gray-100 dark:border-gray-750 pt-4 flex justify-end">
+                            <div className="border-t border-gray-100 dark:border-gray-750 pt-4 flex items-center justify-end gap-3">
                                 <button
                                     type="submit"
-                                    disabled={isSaving}
-                                    className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center gap-1.5 font-bold py-2.5 px-6 rounded-lg text-xs disabled:bg-gray-400"
+                                    disabled={isSaving || isPublishing}
+                                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-650 dark:text-gray-200 flex items-center justify-center gap-1.5 font-bold py-2.5 px-4 rounded-lg text-xs disabled:opacity-50 transition"
                                 >
-                                    <Save className="w-3.5 h-3.5" /> {isSaving ? 'Saving Draft...' : 'Save Draft'}
+                                    <Save className="w-3.5 h-3.5" /> {isSaving ? 'Saving...' : 'Save Draft'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleSaveAndPublish}
+                                    disabled={isSaving || isPublishing}
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center gap-1.5 font-bold py-2.5 px-5 rounded-lg text-xs disabled:bg-gray-400 shadow-sm transition"
+                                >
+                                    <Send className="w-3.5 h-3.5" /> {isSaving ? 'Publishing...' : 'Save & Publish Live'}
                                 </button>
                             </div>
                         </form>
