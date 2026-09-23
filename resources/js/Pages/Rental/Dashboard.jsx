@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { Car, Key, Users, MessageSquare, Wrench, DollarSign, Calendar, ArrowUpRight, Plus, ShieldCheck } from 'lucide-react';
 
-export default function RentalDashboard({ kpis, recentBookings, pendingPickups }) {
+export default function RentalDashboard({ kpis, recentBookings, pendingPickups, liveRequests = [] }) {
     const { tenant } = usePage().props;
 
     const fmtCurrency = (val) => {
@@ -32,7 +32,7 @@ export default function RentalDashboard({ kpis, recentBookings, pendingPickups }
                             Fleet & Rental Operations
                         </h2>
                         <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                            Real-time fleet utilization, driver dispatch, and WhatsApp auto-matching.
+                            Real-time fleet utilization, driver dispatch, and WhatsApp/App request matching.
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
@@ -46,7 +46,7 @@ export default function RentalDashboard({ kpis, recentBookings, pendingPickups }
                             href={route('rental.requests.index')}
                             className="inline-flex items-center gap-1.5 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 text-sm font-semibold rounded-xl shadow-sm transition"
                         >
-                            <MessageSquare className="w-4 h-4 text-emerald-500" /> WhatsApp Inbox
+                            <MessageSquare className="w-4 h-4 text-emerald-500" /> WhatsApp/App Request Inbox
                             {kpis.open_requests > 0 && (
                                 <span className="ml-1 bg-emerald-500 text-slate-950 font-black text-xs px-1.5 py-0.5 rounded-full">
                                     {kpis.open_requests}
@@ -117,6 +117,100 @@ export default function RentalDashboard({ kpis, recentBookings, pendingPickups }
                             <span className="text-xs font-medium text-emerald-500">completed</span>
                         </div>
                     </div>
+                </div>
+
+                {/* ---------- LIVE REQUESTS WIDGET ---------- */}
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-700/60 gap-3">
+                        <div className="flex items-center gap-2.5">
+                            <div className="p-2 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-xl">
+                                <MessageSquare className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <div className="flex items-center gap-2">
+                                    <h3 className="font-bold text-gray-900 dark:text-white text-base">
+                                        Live Requests (WhatsApp & App)
+                                    </h3>
+                                    {liveRequests.length > 0 && (
+                                        <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[11px] font-black px-2 py-0.5 rounded-full">
+                                            {liveRequests.length} open
+                                        </span>
+                                    )}
+                                </div>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                    Inbound customer inquiries automatically parsed and matched to available fleet vehicles
+                                </p>
+                            </div>
+                        </div>
+                        <Link
+                            href={route('rental.requests.index')}
+                            className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 transition"
+                        >
+                            Open Request Inbox <ArrowUpRight className="w-4 h-4" />
+                        </Link>
+                    </div>
+
+                    {liveRequests.length === 0 ? (
+                        <div className="py-8 text-center">
+                            <MessageSquare className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+                            <p className="text-sm font-semibold text-gray-600 dark:text-gray-300">All caught up! No open inquiries</p>
+                            <p className="text-xs text-gray-400 mt-1">Incoming inquiries from WhatsApp or customer PWA bookings appear here instantly.</p>
+                        </div>
+                    ) : (
+                        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {liveRequests.map((req) => (
+                                <div
+                                    key={req.id}
+                                    className="p-4 rounded-xl border border-gray-100 dark:border-gray-700/70 bg-gray-50/50 dark:bg-gray-900/40 flex flex-col justify-between hover:border-emerald-500/40 transition"
+                                >
+                                    <div>
+                                        <div className="flex items-start justify-between gap-2 mb-2">
+                                            <span className="font-bold text-sm text-gray-900 dark:text-white truncate">
+                                                {req.from_name || req.from_phone}
+                                            </span>
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
+                                                req.status === 'matched'
+                                                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300'
+                                                    : 'bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-300'
+                                            }`}>
+                                                {req.status}
+                                            </span>
+                                        </div>
+                                        <p className="text-xs text-gray-600 dark:text-gray-300 line-clamp-2 italic mb-3">
+                                            "{req.message_text}"
+                                        </p>
+                                        <div className="space-y-1 text-xs">
+                                            <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
+                                                <Car className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                                                <span className="truncate">
+                                                    {req.suggested_vehicle
+                                                        ? `${req.suggested_vehicle.model} (${req.suggested_vehicle.plate_number})`
+                                                        : 'Needs fleet assignment'}
+                                                </span>
+                                            </div>
+                                            {req.suggested_driver && (
+                                                <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
+                                                    <Users className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                                                    <span className="truncate">Driver: {req.suggested_driver.name}</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="mt-4 pt-3 border-t border-gray-200/60 dark:border-gray-700/60 flex items-center justify-between">
+                                        <span className="text-[11px] text-gray-400">
+                                            {req.created_at ? new Date(req.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                                        </span>
+                                        <Link
+                                            href={route('rental.requests.index')}
+                                            className="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-500 dark:text-emerald-400"
+                                        >
+                                            Review & Convert ➔
+                                        </Link>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* ---------- PENDING PICKUPS & RECENT BOOKINGS ---------- */}

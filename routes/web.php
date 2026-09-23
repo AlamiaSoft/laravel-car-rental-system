@@ -113,6 +113,7 @@ Route::group(['prefix' => 'app/{tenant_slug}'], function () {
     Route::post('/rent/request', [BookingRequestController::class, 'pwaStore'])->name('pwa.rent.request');
     Route::get('/track/{order_number}', [PwaController::class, 'trackOrder'])->name('pwa.track');
     Route::get('/order', [MiniAppController::class, 'experience'])->defaults('experience', 'order')->name('pwa.menu');
+    Route::get('/bookings', [BookingRequestController::class, 'pwaMyBookings'])->name('pwa.my-bookings');
     Route::get('/{experience}', [MiniAppController::class, 'experience'])->name('pwa.app.experience');
 });
 

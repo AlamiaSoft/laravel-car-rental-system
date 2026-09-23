@@ -94,10 +94,10 @@ export default function RequestsIndex({ requests, availableVehicles, availableDr
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
                         <h2 className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">
-                            WhatsApp Request Inbox
+                            WhatsApp/App Request Inbox
                         </h2>
                         <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-                            Incoming chat inquiries auto-matched to available fleet vehicles and drivers.
+                            Incoming chat & App inquiries auto-matched to available fleet vehicles and drivers.
                         </p>
                     </div>
                     <button
@@ -109,7 +109,7 @@ export default function RequestsIndex({ requests, availableVehicles, availableDr
                 </div>
             }
         >
-            <Head title="WhatsApp Requests" />
+            <Head title="WhatsApp/App Request Inbox" />
 
             <div className="py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
                 {/* Stats Bar */}

@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
 use Inertia\Inertia;
 use Inertia\Response;
+use Modules\Rental\Models\Booking;
 use Modules\Rental\Models\BookingRequest;
 use Modules\Rental\Models\Driver;
 use Modules\Rental\Models\ThirdPartyVendor;
@@ -152,10 +153,73 @@ class BookingRequestController extends Controller
             ]);
         }
 
+        session(['pwa_customer_phone' => $validated['customer_phone']]);
+        session(['pwa_customer_name' => $validated['customer_name']]);
+
         return response()->json([
             'success' => true,
             'message' => 'Your rental request has been received! Our dispatch team will contact you shortly.',
             'request_id' => $bookingRequest->id,
+            'redirect_url' => route('pwa.my-bookings', ['tenant_slug' => $tenant_slug, 'phone' => $validated['customer_phone']]),
+        ]);
+    }
+
+    /**
+     * Customer PWA screen: view active, pending, and past bookings/requests.
+     */
+    public function pwaMyBookings(Request $request, string $tenant_slug): Response
+    {
+        $tenant = Tenant::find($tenant_slug);
+        if (! $tenant || ! $tenant->is_active) {
+            abort(404, 'Car rental business not found.');
+        }
+        tenancy()->initialize($tenant);
+
+        $phone = $request->query('phone') ?? session('pwa_customer_phone');
+        $cleanPhone = $phone ? preg_replace('/[^0-9]/', '', $phone) : null;
+
+        $requests = collect();
+        $bookings = collect();
+
+        if ($cleanPhone) {
+            $phoneSuffix = strlen($cleanPhone) >= 9 ? substr($cleanPhone, -9) : $cleanPhone;
+
+            $requests = BookingRequest::where('tenant_id', $tenant->id)
+                ->where(function ($q) use ($cleanPhone, $phoneSuffix) {
+                    $q->where('from_phone', 'LIKE', "%{$phoneSuffix}%")
+                        ->orWhere('from_phone', $cleanPhone);
+                })
+                ->with(['suggestedVehicle', 'suggestedDriver', 'booking.vehicle', 'booking.driver'])
+                ->latest()
+                ->get();
+
+            $bookings = Booking::where('tenant_id', $tenant->id)
+                ->whereHas('client', function ($q) use ($cleanPhone, $phoneSuffix) {
+                    $q->where('phone', 'LIKE', "%{$phoneSuffix}%")
+                        ->orWhere('phone', $cleanPhone);
+                })
+                ->with(['vehicle', 'driver', 'client'])
+                ->latest()
+                ->get();
+        }
+
+        $status = 'published';
+        if ($request->query('preview') === 'true' && auth()->check() && auth()->user()->tenant_id === $tenant->id) {
+            $status = 'draft';
+        }
+        $settings = $tenant->settings($status);
+
+        return Inertia::render('Pwa/MyBookings', [
+            'tenant' => [
+                'id' => $tenant->id,
+                'name' => $tenant->name,
+            ],
+            'phone' => $phone,
+            'customerPhone' => $phone,
+            'requests' => $requests,
+            'bookings' => $bookings,
+            'settings' => $settings,
+            'previewMode' => $status === 'draft',
         ]);
     }
 }

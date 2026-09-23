@@ -44,6 +44,12 @@ class RentalDashboardController extends Controller
             ->take(5)
             ->get();
 
+        $liveRequests = BookingRequest::with(['suggestedVehicle', 'suggestedDriver'])
+            ->whereIn('status', [RequestStatus::Matched, RequestStatus::Unmatched])
+            ->latest()
+            ->take(5)
+            ->get();
+
         return Inertia::render('Rental/Dashboard', [
             'kpis' => [
                 'active_rentals' => $activeRentals,
@@ -57,6 +63,7 @@ class RentalDashboardController extends Controller
             ],
             'recentBookings' => $recentBookings,
             'pendingPickups' => $pendingPickups,
+            'liveRequests' => $liveRequests,
             'daysLeftInTrial' => $tenant?->daysLeftInTrial(),
             'isReadOnly' => $tenant?->isReadOnly() ?? false,
         ]);

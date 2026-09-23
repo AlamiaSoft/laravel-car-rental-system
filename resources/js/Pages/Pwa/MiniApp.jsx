@@ -1,7 +1,8 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
 import { Calendar, Clock, MessageSquare, CheckCircle, Info, Sparkles, MapPin, Phone, Car, Fuel, Users, Check } from 'lucide-react';
 import axios from 'axios';
+import PwaLayout from '@/Layouts/PwaLayout';
 
 function getContrastColor(hexColor) {
     if (!hexColor || typeof hexColor !== 'string' || !hexColor.startsWith('#')) return '#ffffff';
@@ -84,6 +85,16 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                 end_date: rentalForm.end_date,
                 notes: rentalForm.notes,
             });
+
+            try {
+                if (rentalForm.phone) {
+                    localStorage.setItem(`pwa_client_phone_${tenant.id}`, rentalForm.phone);
+                    localStorage.setItem(`pwa_client_name_${tenant.id}`, rentalForm.name);
+                }
+            } catch (storageErr) {
+                // ignore storage error
+            }
+
             setRentalSubmitted(true);
         } catch (err) {
             setRentalError(err.response?.data?.message || 'Failed to submit rental request. Please try again.');
@@ -93,11 +104,9 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col font-sans">
+        <PwaLayout tenantName={tenant.name} tenantId={tenant.id} primaryColor={primaryColor} previewMode={previewMode} maxWidth="max-w-xl">
             <Head>
                 <title>{`${tenant.name} - ${isRental ? 'Car Rental Fleet' : 'Mini App'}`}</title>
-                <link rel="manifest" href={`/app/${tenant.id}/manifest.json`} />
-                <meta name="theme-color" content={primaryColor} />
             </Head>
 
             {/* Dynamic theme style injection */}
@@ -108,28 +117,8 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                 }
             `}</style>
 
-            {/* Top Branding Banner */}
-            <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-100 dark:border-gray-700 sticky top-0 z-30">
-                <div className="max-w-xl mx-auto px-4 py-4 flex items-center justify-between">
-                    <div>
-                        <h1 className="font-bold text-lg text-gray-900 dark:text-white leading-tight">
-                            {tenant.name}
-                        </h1>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {isRental ? 'Car Rental & Fleet Dispatch' : isBooking ? 'Online Booking & Appointments' : 'Digital Hub'}
-                        </p>
-                    </div>
-
-                    {previewMode && (
-                        <span className="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-300">
-                            Live Preview
-                        </span>
-                    )}
-                </div>
-            </header>
-
             {/* Main Content Area */}
-            <main className="flex-1 max-w-xl w-full mx-auto p-4 space-y-6">
+            <div className="flex-1 w-full p-4 space-y-6">
                 {/* Hero Card */}
                 <div 
                     className="rounded-2xl p-6 text-white shadow-lg relative overflow-hidden"
@@ -266,15 +255,21 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                         <CheckCircle className="w-7 h-7" />
                                     </div>
                                     <h4 className="text-lg font-bold text-gray-900 dark:text-white">Rental Request Sent!</h4>
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 max-w-xs mx-auto">
-                                        Your inquiry has been placed into our automated dispatch queue. Our operations team will confirm availability and contact you via WhatsApp shortly.
-                                    </p>
-                                    <button
-                                        onClick={() => setRentalSubmitted(false)}
-                                        className="mt-4 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 text-xs font-semibold rounded-lg transition"
-                                    >
-                                        Submit Another Request
-                                    </button>
+                                    <div className="flex items-center justify-center gap-3 pt-3 flex-wrap">
+                                        <a
+                                            href={`/app/${tenant.id}/bookings?phone=${encodeURIComponent(rentalForm.phone)}`}
+                                            className="px-4 py-2.5 font-bold text-xs rounded-xl shadow-sm transition hover:opacity-90 inline-flex items-center gap-1.5"
+                                            style={{ backgroundColor: primaryColor, color: contrastColor }}
+                                        >
+                                            <Calendar className="w-3.5 h-3.5" /> View My Bookings ➔
+                                        </a>
+                                        <button
+                                            onClick={() => setRentalSubmitted(false)}
+                                            className="px-4 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-650 text-xs font-semibold rounded-xl transition"
+                                        >
+                                            New Request
+                                        </button>
+                                    </div>
                                 </div>
                             ) : (
                                 <form onSubmit={handleRentalSubmit} className="space-y-4">
@@ -508,12 +503,12 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                         </div>
                     </div>
                 )}
-            </main>
+            </div>
 
             {/* Footer */}
             <footer className="py-6 text-center text-xs text-gray-400">
                 Powered by Ormeasy Car Rental OS
             </footer>
-        </div>
+        </PwaLayout>
     );
 }

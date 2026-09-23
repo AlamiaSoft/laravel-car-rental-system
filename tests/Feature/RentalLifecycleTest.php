@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Services\TenantCapabilityService;
 use Carbon\Carbon;
 use Modules\Rental\Models\Booking;
+use Modules\Rental\Models\BookingRequest;
 use Modules\Rental\Models\Client;
 use Modules\Rental\Models\Driver;
 use Modules\Rental\Models\Vehicle;
@@ -281,3 +282,70 @@ test('expired trial write gating blocks mutation while allowing read queries', f
     ]);
     expect($writeResponse->status())->toBe(403);
 });
+
+test('pwa my bookings endpoint renders customer bookings and inquiries based on phone', function () {
+    $client = Client::create([
+        'name' => 'Usman Shahid',
+        'phone' => '+923009988776',
+    ]);
+
+    $vehicle = Vehicle::create([
+        'plate_number' => 'ICT-23-999',
+        'model' => 'Honda Civic RS',
+        'year' => 2023,
+        'daily_rate' => 12000,
+        'mileage' => 15000,
+        'status' => VehicleStatus::Rented,
+    ]);
+
+    $booking = Booking::create([
+        'booking_number' => 'BK-TEST-001',
+        'client_id' => $client->id,
+        'vehicle_id' => $vehicle->id,
+        'pricing_mode' => PricingMode::Daily,
+        'start_date' => now()->toDateString(),
+        'end_date' => now()->addDays(3)->toDateString(),
+        'status' => BookingStatus::Active,
+        'total_cost' => 36000,
+    ]);
+
+    $bookingRequest = BookingRequest::create([
+        'from_name' => 'Usman Shahid',
+        'from_phone' => '+923009988776',
+        'message_text' => 'Need a Civic for 3 days',
+        'status' => RequestStatus::Matched,
+        'suggested_vehicle_id' => $vehicle->id,
+    ]);
+
+    $response = $this->get(route('pwa.my-bookings', [
+        'tenant_slug' => $this->tenant->id,
+        'phone' => '9988776',
+    ]));
+
+    $response->assertOk();
+    $response->assertInertia(fn ($page) => $page
+        ->component('Pwa/MyBookings')
+        ->where('customerPhone', '9988776')
+        ->has('bookings', 1)
+        ->has('requests', 1)
+    );
+});
+
+test('rental dashboard supplies live requests alongside kpis and pending pickups', function () {
+    $request = BookingRequest::create([
+        'from_name' => 'Sara Ali',
+        'from_phone' => '+923114455667',
+        'message_text' => 'Looking for an SUV for Murree trip',
+        'status' => RequestStatus::Unmatched,
+    ]);
+
+    $response = $this->actingAs($this->user)->get(route('rental.dashboard'));
+
+    $response->assertOk();
+    $response->assertInertia(fn ($page) => $page
+        ->component('Rental/Dashboard')
+        ->has('liveRequests', 1)
+        ->where('liveRequests.0.from_name', 'Sara Ali')
+    );
+});
+

@@ -97,7 +97,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                                 </Dropdown.Trigger>
                                                 <Dropdown.Content>
                                                     <Dropdown.Link href={route('rental.bookings.index')}>Bookings</Dropdown.Link>
-                                                    <Dropdown.Link href={route('rental.requests.index')}>WhatsApp Requests</Dropdown.Link>
+                                                    <Dropdown.Link href={route('rental.requests.index')}>WhatsApp/App Requests</Dropdown.Link>
                                                     <Dropdown.Link href={route('rental.drivers.index')}>Drivers</Dropdown.Link>
                                                     <Dropdown.Link href={route('rental.clients.index')}>Clients</Dropdown.Link>
                                                 </Dropdown.Content>
@@ -344,7 +344,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     active={route().current('rental.requests.*')}
                                     className="pl-6"
                                 >
-                                    WhatsApp Requests
+                                    WhatsApp/App Requests
                                 </ResponsiveNavLink>
                                 <ResponsiveNavLink
                                     href={route('rental.drivers.index')}
