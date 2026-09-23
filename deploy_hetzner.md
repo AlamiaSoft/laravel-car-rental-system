@@ -28,15 +28,15 @@ APP_KEY=base64:LM66X++eqZ6V1i5aG+geUI0Uq4/wfDQzIt4PLdfF91c=
 
 # Database configuration
 DB_CONNECTION=pgsql
-DB_HOST=db
+DB_HOST=carrental-db
 DB_PORT=5432
 DB_DATABASE=carrental_os
 DB_USERNAME=carrental
 DB_PASSWORD=postgression2026
 
 # Redis / Queue configuration
-REDIS_HOST=redis
-REDIS_PASSWORD=null
+REDIS_HOST=carrental-redis
+REDIS_PASSWORD=
 REDIS_PORT=6379
 CACHE_STORE=redis
 QUEUE_CONNECTION=redis

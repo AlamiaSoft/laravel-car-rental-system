@@ -36,6 +36,8 @@ if [ $RETRIES -gt 0 ]; then
   echo "Running database seeders..."
   php artisan db:seed --class=RolesAndPermissionsSeeder --force || true
   php artisan db:seed --class=CarRentalSeeder --force || true
+else
+  echo "CRITICAL ERROR: Database migration failed after 15 attempts! Check DB_HOST, DB_USERNAME, DB_PASSWORD."
 fi
 
 echo "Applying final storage and bootstrap cache permissions for php-fpm..."
