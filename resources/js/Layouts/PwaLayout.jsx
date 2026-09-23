@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu as MenuIcon, X, UtensilsCrossed, Search, MapPin, Phone, Clock, FileText } from 'lucide-react';
+import { Head } from '@inertiajs/react';
+import { Menu as MenuIcon, X, Car, UtensilsCrossed, Search, MapPin, Phone, Clock, FileText } from 'lucide-react';
 
 export default function PwaLayout({ children, tenantName, tenantId }) {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -22,6 +23,11 @@ export default function PwaLayout({ children, tenantName, tenantId }) {
 
     return (
         <div className="min-h-screen bg-gray-150 flex flex-col items-center justify-start text-gray-900">
+            <Head>
+                {tenantId && <link rel="manifest" href={`/app/${tenantId}/manifest.json`} />}
+                <meta name="theme-color" content="#f59e0b" />
+            </Head>
+
             {/* Mobile shell container */}
             <div className="w-full max-w-md min-h-screen bg-white shadow-xl flex flex-col relative pb-20">
                 
@@ -37,16 +43,16 @@ export default function PwaLayout({ children, tenantName, tenantId }) {
                             <MenuIcon className="w-6 h-6" />
                         </button>
                         
-                        <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-black shadow-sm text-sm">
-                            {tenantName ? tenantName.charAt(0).toUpperCase() : 'R'}
+                        <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 font-black shadow-sm text-sm">
+                            <Car className="w-4 h-4" />
                         </div>
                         <div>
                             <h1 className="text-sm font-bold text-gray-900 leading-tight">
-                                {tenantName || 'Restaurant OS'}
+                                {tenantName || 'Car Rental Agency'}
                             </h1>
-                            <span className="text-[10px] text-green-600 font-semibold flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                Live Ordering Enabled
+                            <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                Fleet Dispatch Enabled
                             </span>
                         </div>
                     </div>
@@ -74,8 +80,8 @@ export default function PwaLayout({ children, tenantName, tenantId }) {
                         <div className="relative w-72 max-w-[80vw] h-full bg-white shadow-2xl flex flex-col p-5 space-y-6 animate-slide-in">
                             <div className="flex justify-between items-center border-b border-gray-100 pb-4">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-extrabold text-sm">
-                                        {tenantName ? tenantName.charAt(0).toUpperCase() : 'R'}
+                                    <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 font-extrabold text-sm">
+                                        <Car className="w-4 h-4" />
                                     </div>
                                     <span className="font-extrabold text-sm text-gray-900">{tenantName}</span>
                                 </div>
@@ -90,12 +96,12 @@ export default function PwaLayout({ children, tenantName, tenantId }) {
                             {/* Nav Links */}
                             <nav className="flex-1 space-y-1.5 overflow-y-auto">
                                 <a 
-                                    href={`/order/${tenantId}`}
+                                    href={`/app/${tenantId}/rent`}
                                     className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50"
                                     onClick={() => setIsDrawerOpen(false)}
                                 >
-                                    <UtensilsCrossed className="w-4 h-4 text-gray-500" />
-                                    Explore Menu
+                                    <Car className="w-4 h-4 text-amber-500" />
+                                    Explore Rental Fleet
                                 </a>
 
                                 {/* Recent Orders Section */}

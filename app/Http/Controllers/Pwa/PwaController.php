@@ -28,7 +28,7 @@ class PwaController extends Controller
     {
         $tenant = Tenant::find($slug);
         if (! $tenant || ! $tenant->is_active) {
-            abort(404, 'Restaurant not found.');
+            abort(404, 'Rental agency not found.');
         }
         tenancy()->initialize($tenant);
 
@@ -121,18 +121,35 @@ class PwaController extends Controller
         $settings = $tenant->settings('published');
         $branding = $settings->branding ?? [];
 
+        $resolver = app(PwaExperienceResolver::class);
+        $startUrl = $resolver->primaryExperience($tenant);
+
+        $defaultLogo = asset('images/ormeasy-logo-dark.webp');
+        $logo = ! empty($branding['logo']) ? $branding['logo'] : $defaultLogo;
+
         $manifest = [
-            'name' => $tenant->name,
+            'name' => $tenant->name.' - Car Rentals',
             'short_name' => $tenant->name,
-            'start_url' => route('pwa.menu', ['tenant_slug' => $tenant_slug]),
+            'description' => $branding['description'] ?? "{$tenant->name} - Fleet Booking & WhatsApp Dispatch Portal",
+            'start_url' => $startUrl,
+            'scope' => "/app/{$tenant_slug}/",
             'display' => 'standalone',
-            'background_color' => '#ffffff',
-            'theme_color' => $branding['primary_color'] ?? '#ef4444',
+            'orientation' => 'portrait',
+            'background_color' => '#0f172a',
+            'theme_color' => $branding['primary_color'] ?? '#f59e0b',
+            'categories' => ['business', 'travel', 'transportation', 'car-rental'],
             'icons' => [
                 [
-                    'src' => $branding['logo'] ?: 'https://cdn-icons-png.flaticon.com/512/3565/3565418.png',
+                    'src' => $logo,
                     'sizes' => '512x512',
-                    'type' => 'image/png',
+                    'type' => str_ends_with($logo, '.webp') ? 'image/webp' : 'image/png',
+                    'purpose' => 'any maskable',
+                ],
+                [
+                    'src' => $logo,
+                    'sizes' => '192x192',
+                    'type' => str_ends_with($logo, '.webp') ? 'image/webp' : 'image/png',
+                    'purpose' => 'any maskable',
                 ],
             ],
         ];

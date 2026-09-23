@@ -59,8 +59,8 @@ test('social auth callback registers new user and creates tenant and role', func
     expect($user->tenant_id)->not->toBeNull();
     $tenant = Tenant::find($user->tenant_id);
     expect($tenant)->not->toBeNull();
-    expect($tenant->name)->toBe("John's Restaurant");
-    expect($tenant->id)->toBe('johns-restaurant');
+    expect($tenant->name)->toBe("John's Car Rentals");
+    expect($tenant->id)->toBe('johns-car-rentals');
 
     // Verify Owner role was assigned
     expect($user->hasRole(UserRole::Owner->value))->toBeTrue();

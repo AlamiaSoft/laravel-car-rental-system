@@ -11,7 +11,7 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
-        business_type: 'restaurant',
+        business_type: 'car_rental',
     });
 
     const { flash } = usePage().props;

@@ -78,11 +78,12 @@ class SocialAuthController extends Controller
 
                 // Create a tenant for the new user based on selected business type
                 $businessTypeValue = session()->pull('oauth_business_type');
-                $businessType = BusinessType::tryFrom($businessTypeValue) ?? BusinessType::Restaurant;
+                $businessType = BusinessType::tryFrom($businessTypeValue) ?? BusinessType::CarRental;
 
                 $suffix = match ($businessType) {
                     BusinessType::Retail => 'Store',
                     BusinessType::Restaurant => 'Restaurant',
+                    BusinessType::CarRental => 'Car Rentals',
                 };
 
                 $firstName = explode(' ', $user->name)[0];

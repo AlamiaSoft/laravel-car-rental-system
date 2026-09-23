@@ -37,6 +37,5 @@ test('regular tenant user is not redirected to admin dashboard', function () {
     $response = $this->actingAs($user)
         ->get('/dashboard');
 
-    $response->assertOk();
-    $response->assertInertia(fn ($page) => $page->component('Dashboard'));
+    $response->assertRedirect(route('rental.dashboard'));
 });

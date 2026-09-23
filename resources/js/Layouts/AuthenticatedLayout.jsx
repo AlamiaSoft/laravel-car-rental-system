@@ -11,8 +11,8 @@ export default function AuthenticatedLayout({ header, children }) {
     const tenant = usePage().props.tenant;
 
     const hasCapability = (cap) => {
-        if (!tenant) return true;
-        return tenant.capabilities && tenant.capabilities.includes(cap);
+        if (!tenant) return ['rentals', 'fleet'].includes(cap);
+        return Boolean(tenant.capabilities && tenant.capabilities.includes(cap));
     };
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -159,12 +159,12 @@ export default function AuthenticatedLayout({ header, children }) {
                         <div className="hidden sm:ms-6 sm:flex sm:items-center">
                             {user.tenant_id && (
                                 <a
-                                    href={route('pwa.menu', { tenant_slug: user.tenant_id })}
+                                    href={`/app/${user.tenant_id}/${tenant?.primary_experience || 'rent'}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="me-3 inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition duration-150 ease-in-out shadow-sm"
+                                    className="me-3 inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition duration-150 ease-in-out shadow-sm"
                                 >
-                                    <Smartphone className="w-3.5 h-3.5" /> View Your App
+                                    <Smartphone className="w-3.5 h-3.5" /> View Fleet App
                                 </a>
                             )}
                             <div className="relative ms-3">

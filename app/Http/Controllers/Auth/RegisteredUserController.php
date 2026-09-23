@@ -43,7 +43,7 @@ class RegisteredUserController extends Controller
             'business_type' => ['nullable', 'string', new Enum(BusinessType::class)],
         ]);
 
-        $businessType = BusinessType::tryFrom($request->input('business_type')) ?? BusinessType::Restaurant;
+        $businessType = BusinessType::tryFrom($request->input('business_type')) ?? BusinessType::CarRental;
 
         $slug = Str::slug($request->name);
         if (empty($slug)) {

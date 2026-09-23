@@ -29,7 +29,7 @@ Route::get('/dashboard', function (Request $request, MerchantRoiService $roiServ
         return redirect()->route('admin.dashboard');
     }
 
-    if (tenant() && tenant()->hasCapability('rentals') && ! tenant()->hasCapability('ordering')) {
+    if (! tenant() || tenant()->hasCapability('rentals') || ! tenant()->hasCapability('ordering')) {
         return redirect()->route('rental.dashboard');
     }
 

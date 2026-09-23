@@ -82,7 +82,11 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col font-sans">
-            <Head title={`${tenant.name} - ${isRental ? 'Car Rental Fleet' : 'Mini App'}`} />
+            <Head>
+                <title>{`${tenant.name} - ${isRental ? 'Car Rental Fleet' : 'Mini App'}`}</title>
+                <link rel="manifest" href={`/app/${tenant.id}/manifest.json`} />
+                <meta name="theme-color" content={primaryColor} />
+            </Head>
 
             {/* Top Branding Banner */}
             <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-100 dark:border-gray-700 sticky top-0 z-30">
@@ -117,8 +121,8 @@ export default function MiniApp({ tenant, customer, services = [], vehicles = []
                                 <img src={branding.logo} alt={tenant.name} className="w-full h-full object-cover" />
                             </div>
                         ) : (
-                            <div className="w-14 h-14 rounded-2xl bg-white/10 border-2 border-white/20 flex items-center justify-center text-2xl font-bold flex-shrink-0">
-                                {isRental ? '🚗' : '✨'}
+                            <div className="w-14 h-14 rounded-2xl bg-white/10 border-2 border-white/20 flex items-center justify-center flex-shrink-0">
+                                {isRental ? <Car className="w-7 h-7 text-amber-300" /> : <Sparkles className="w-7 h-7 text-white" />}
                             </div>
                         )}
                         <div>
