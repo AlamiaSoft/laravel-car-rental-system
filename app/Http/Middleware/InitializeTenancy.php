@@ -21,8 +21,12 @@ class InitializeTenancy
         ]);
 
         if (auth()->check() && auth()->user()->tenant_id) {
-            tenancy()->initialize(auth()->user()->tenant_id);
-            \Log::info('Tenancy initialized', ['tenant' => tenant('id')]);
+            try {
+                tenancy()->initialize(auth()->user()->tenant_id);
+                \Log::info('Tenancy initialized', ['tenant' => tenant('id')]);
+            } catch (\Throwable $e) {
+                \Log::warning('Failed to initialize tenancy for tenant: ' . auth()->user()->tenant_id . ' - ' . $e->getMessage());
+            }
         }
 
         return $next($request);

@@ -1,7 +1,13 @@
 #!/bin/sh
 set -e
 
-echo "Ensuring storage and cache directory permissions..."
+# If a custom command is passed (worker, cron, reverb, etc.), execute it directly
+if [ "$#" -gt 0 ] && [ "$1" != "supervisord" ] && [ "$1" != "/entrypoint" ]; then
+    echo "Executing custom container command: $@"
+    exec "$@"
+fi
+
+echo "Ensuring storage and cache directory structure..."
 mkdir -p /app/storage/framework/cache/data \
          /app/storage/framework/sessions \
          /app/storage/framework/views \
@@ -9,8 +15,7 @@ mkdir -p /app/storage/framework/cache/data \
          /app/storage/app/public \
          /app/bootstrap/cache
 
-chown -R application:application /app/storage /app/bootstrap/cache
-chmod -R 775 /app/storage /app/bootstrap/cache
+touch /app/storage/logs/laravel.log
 
 echo "Linking public storage..."
 php artisan storage:link --force || true
@@ -32,6 +37,11 @@ if [ $RETRIES -gt 0 ]; then
   php artisan db:seed --class=RolesAndPermissionsSeeder --force || true
   php artisan db:seed --class=CarRentalSeeder --force || true
 fi
+
+echo "Applying final storage and bootstrap cache permissions for php-fpm..."
+chown -R application:application /app/storage /app/bootstrap/cache
+chmod -R 775 /app/storage /app/bootstrap/cache
+chmod 664 /app/storage/logs/laravel.log || true
 
 echo "Starting application supervisor..."
 exec /entrypoint supervisord

@@ -47,7 +47,7 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),
             ],
-            'tenant' => tenancy()->initialized ? [
+            'tenant' => (tenancy()->initialized && tenant()) ? [
                 'id' => tenant('id'),
                 'name' => tenant('name'),
                 'hasPendingInvoices' => Invoice::where('tenant_id', tenant('id'))->where('status', 'pending')->exists(),
