@@ -8,7 +8,7 @@
 
         <!-- Favicon & Branding -->
         <link rel="icon" type="image/webp" href="/favicon.webp">
-        <link rel="apple-touch-icon" href="/images/ormeasy-car-logo.webp">
+        <link rel="apple-touch-icon" href="/images/ormeasy-logo-dark.webp">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
